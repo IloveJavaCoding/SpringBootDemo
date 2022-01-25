@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页框架</title>
+    <link href="../static/res/logo1.ico" rel="shortcut icon"/>
+    <script type="text/javascript">
+    //1. 标签属性
+        const ATTR_ID = 'id';
+        const ATTR_SRC = 'src';
+        const ATTR_CLASS = 'class';
+
+        //2. listener type
+        const LISTENER_TYPE_CLICK = 'click';
+        const LISTENER_TYPE_SCROLL = 'scroll';
+
+        //3. style
+        const STYLE_HEADER_SHADOW = 'header_shadow';
+        const STYLE_BLOCk = 'tab_block';
+        const STYLE_BLOCk_SELECTED = 'tab_block tab_block_selected';
+        const STYLE_DEL_ICON = 'tab_icon_del';
+        const STYLE_MENU_MIAN = 'li_menu';//仅主菜单
+        const STYLE_MENU_MIAN_SEC = 'li_menu sub_menu';//含子菜单
+        const STYLE_MENU_SEC_CONT = 'sub_menu_cont';
+        const STYLE_FRAME = 'frame';
+
+        //4. 自定义
+        const SCROLL_LEFT = 'left';//滚动条左移
+        const SCROLL_RIGHT = 'right';
+        const VIEW_VISIBLE = 'visible';
+        const VIEW_HIDDEN = 'hidden';
+        const VIEW_NONE = 'none';
+        const FRAME_KEY_HEAD = 'iframe_';//ifrmae id 统一前缀
+
+        const SRC_LOGO = '../static/res/logo2.png';//logo 资源
+        const SRC_DEL = '../static/res/icon_del.png';//删除图标 资源
+        const SRC_BACKTOP = '../static/res/icon_backtop.png';//返回顶部
+        const SRC_LEFT = '../static/res/icon_arrow_left.png';//
+        const SRC_RIGHT = '../static/res/icon_arrow_right.png';//
+        const LOGO_TXT = 'VIRGO';
+
+        const menu = [
+            {
+                tag: 1,//标签等级 主标签
+                name: "首页",//标签名
+                key: "menu_main",//（唯一值）
+                value: "home.html",//跳转路径值
+                defTag: true,//自动添加tab,不可删除
+                hasChild: false,//是否带有子目录
+                child: []
+            },
+            {
+                tag: 1,//标签等级
+                name: "学习文档",//标签名
+                key: "menu_web",//（唯一值）
+                value: "#",//跳转路径值
+                defTag: false,
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "菜鸟",//标签名
+                        key: "menu_web_runoob",//（唯一值）
+                        value: "https://www.runoob.com/",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "layer文档",
+                        key: "menu_web_layer",
+                        value: "https://www.layui.com/doc/modules/layer.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "adb命令",
+                        key: "menu_web_adb",
+                        value: "https://www.cnblogs.com/wyl-520/p/9204809.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "easy poi",
+                        key: "menu_web_easypoi",
+                        value: "http://easypoi.mydoc.io/",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "vue文档",
+                        key: "menu_web_vue",
+                        value: "https://element.eleme.cn/",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "druid配置",
+                        key: "menu_web_druid",
+                        value: "https://www.cnblogs.com/halberd-lee/p/11304790.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+            {
+                tag: 1,//标签等级
+                name: "自定义",//标签名
+                key: "menu_mine",//（唯一值）
+                value: "#",//跳转路径值
+                defTag: false,
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "表格",//标签名
+                        key: "menu_mine_table",//（唯一值）
+                        value: "table.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "登入",//标签名
+                        key: "menu_mine_login",//（唯一值）
+                        value: "login.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "数据测试",
+                        key: "menu_mine_test",
+                        value: "test.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "HTML 5",
+                        key: "menu_mine_html5",
+                        value: "html5.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "个人中心",
+                        key: "menu_mine_mine",
+                        value: "mine.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+            {
+                tag: 1,//标签等级
+                name: "Practice",//标签名
+                key: "menu_practice",//（唯一值）
+                value: "#",//跳转路径值
+                defTag: false,
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "0128-1",//标签名
+                        key: "menu_practice_0128_1",//（唯一值）
+                        value: "myweb0128.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "0128-2",//标签名
+                        key: "menu_practice_0128_2",//（唯一值）
+                        value: "myweb0128-2.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0128-3",
+                        key: "menu_practice_0128_3",
+                        value: "myweb0128-3.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0130",
+                        key: "menu_practice_0130",
+                        value: "myweb0130.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0201",
+                        key: "menu_practice_0201",
+                        value: "myweb0201.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0202",
+                        key: "menu_practice_0202",
+                        value: "myweb0202.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0202-flex",
+                        key: "menu_practice_0202_flex",
+                        value: "myweb0202-flex.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0204",
+                        key: "menu_practice_0204",
+                        value: "myweb0204.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0208",
+                        key: "menu_practice_0208",
+                        value: "myweb0208.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0213",
+                        key: "menu_practice_0213",
+                        value: "myweb0213.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0216",
+                        key: "menu_practice_0216",
+                        value: "myweb0216.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0217",
+                        key: "menu_practice_0217",
+                        value: "myweb0217.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0303",
+                        key: "menu_practice_0303",
+                        value: "myweb0303.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0304",
+                        key: "menu_practice_0304",
+                        value: "myweb0304.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0310",
+                        key: "menu_practice_0310",
+                        value: "myweb0310.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0310-2",
+                        key: "menu_practice_0310_2",
+                        value: "myweb0310-2.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0323",
+                        key: "menu_practice_0323",
+                        value: "myweb20323.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0324",
+                        key: "menu_practice_0324",
+                        value: "myweb20324.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0325",
+                        key: "menu_practice_0325",
+                        value: "myweb20325.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0327",
+                        key: "menu_practice_0327",
+                        value: "myweb20327.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0329",
+                        key: "menu_practice_0329",
+                        value: "myweb20329.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0404",
+                        key: "menu_practice_0404",
+                        value: "myweb20404.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0405",
+                        key: "menu_practice_0405",
+                        value: "myweb20405.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0406",
+                        key: "menu_practice_0406",
+                        value: "myweb20406.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0407",
+                        key: "menu_practice_0407",
+                        value: "myweb20407.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "0408",
+                        key: "menu_practice_0408",
+                        value: "myweb20408.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "test",
+                        key: "menu_practice_test",
+                        value: "mywebtest.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+            {
+                tag: 1,//标签等级
+                name: "小项目",//标签名
+                key: "menu_project",//（唯一值）
+                value: "#",//跳转路径值
+                defTag: false,
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "烟花",//标签名
+                        key: "menu_project_1",//（唯一值）
+                        value: "flower.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "dimg",//标签名
+                        key: "menu_project_dimg",//（唯一值）
+                        value: "project-dimg.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "flower",
+                        key: "menu_project_flower",
+                        value: "project-flower.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "frame",
+                        key: "menu_project_frame",
+                        value: "project-frame.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "rain",
+                        key: "menu_project_rain",
+                        value: "project-rain.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "rain2",
+                        key: "menu_project_rain2",
+                        value: "project-rain2.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "taiji",
+                        key: "menu_project_taiji",
+                        value: "project-taiji.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "time",
+                        key: "menu_project_time",
+                        value: "project-time.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+        ];//格式化菜单数据
+        const addLogo = true;//安排logo
+        const addNav = false;//是否启用动态导航栏，默认显示
+        const scroll_unit = 5;//滚动条每次变化像素点
+        const scroll_tab = 100;//向左、向右按钮每次触发滚动距离
+        const footer_height = 40;//底部固定栏高度（多加几个像素），用于子页面高度补偿
+
+        let tabMap;//已显示标签
+        let navTabs;//动态导航栏标签
+        let curTab;//当前选中的标签
+        let content;//iframe 容器
+
+        //监听页面滚动控制返回顶部按钮显隐
+        window.addEventListener(LISTENER_TYPE_SCROLL, function () {
+            let scrollTop = document.documentElement.scrollTop;//页面上下方向滚动距离
+            // console.log('滚动: ' + scrollTop);
+            //当页面滚动时，将header冻结
+            let header = document.getElementById("header");
+            //滚动按钮一次40px;
+            if (scrollTop > 40) {//header.clientHeight
+                //固定header
+                header.style.position = 'fixed';
+                header.style.top = '0';
+            } else {
+                header.style.position = 'static';//恢复默认值
+            }
+
+            //翻过一个页面距离
+            let back_top = document.getElementById("back_top");
+            if (scrollTop > document.body.clientHeight) {
+                back_top.style.visibility = VIEW_VISIBLE;
+            } else {
+                back_top.style.visibility = VIEW_HIDDEN;
+            }
+        });
+
+        function initData() {
+            tabMap = new Map();
+            if (addNav) {
+                navTabs = document.getElementById("nav_tabs");
+            } else {
+                let nav = document.getElementById("nav");
+                nav.style.display = VIEW_NONE;
+
+                //当不要导航栏时，header添加阴影效果
+                let header = document.getElementById("header");
+                header.setAttribute(ATTR_CLASS, STYLE_HEADER_SHADOW);
+            }
+            content = document.getElementById("content");
+
+            initImage();
+            initMainMenu();
+            resetNavTabsWidth();
+        }
+
+        //初始化图片资源
+        function initImage() {
+            //logo
+            let logo = document.getElementById("logo");
+            if (addLogo) {
+                let img = document.getElementById("logo_img");
+                img.setAttribute(ATTR_SRC, SRC_LOGO);
+
+                let txt = document.getElementById("logo_txt");
+                txt.innerText = LOGO_TXT;
+            } else {
+                logo.style.display = VIEW_NONE;
+            }
+
+            //返回顶部
+            let backtopimg = document.getElementById("back_top_img");
+            backtopimg.setAttribute(ATTR_SRC, SRC_BACKTOP);
+
+            //左右按钮
+            let left = document.getElementById("nav_arrow_left");
+            left.setAttribute(ATTR_SRC, SRC_LEFT);
+
+            let right = document.getElementById("nav_arrow_right");
+            right.setAttribute(ATTR_SRC, SRC_RIGHT);
+        }
+
+        /**
+         * 初始化顶部菜单栏
+         */
+        function initMainMenu() {
+            let mainMenu = document.getElementById("main_menu");
+            menu.forEach(function (object) {
+                // writeObj(object);
+                let hasChild = object["hasChild"];
+                if (hasChild) {
+                    //如果有子菜单，则父级菜单点击无效
+                    let li_menu1 = document.createElement("li");
+                    li_menu1.setAttribute(ATTR_CLASS, STYLE_MENU_MIAN_SEC);
+                    let a1 = document.createElement("a");
+                    a1.setAttribute("href", "javascript:");
+                    a1.innerText = object["name"];
+                    li_menu1.appendChild(a1);
+
+                    //添加子菜单
+                    let div = document.createElement("div");
+                    div.setAttribute(ATTR_CLASS, STYLE_MENU_SEC_CONT);
+
+                    let subList = object["child"];
+                    subList.forEach(function (object) {
+                        let a2 = document.createElement("a");
+                        a2.setAttribute("href", "javascript:");
+                        a2.addEventListener(LISTENER_TYPE_CLICK, function () {
+                            addTabs(object["key"], object["value"], object["name"], !object["defTag"]);
+                        });
+                        a2.innerText = object["name"];
+                        if (object["defTag"]) {
+                            addTabs(object["key"], object["value"], object["name"], !object["defTag"]);
+                        }
+                        div.appendChild(a2);
+                    })
+                    li_menu1.appendChild(div);
+                    mainMenu.appendChild(li_menu1);
+                } else {
+                    //仅添加父级菜单
+                    let li_menu = document.createElement("li");
+                    li_menu.setAttribute(ATTR_CLASS, STYLE_MENU_MIAN);
+                    let a = document.createElement("a");
+                    a.setAttribute("href", "javascript:");
+                    a.addEventListener(LISTENER_TYPE_CLICK, function () {
+                        addTabs(object["key"], object["value"], object["name"], !object["defTag"]);
+                    });
+                    a.innerText = object["name"];
+                    li_menu.appendChild(a);
+                    mainMenu.appendChild(li_menu);
+
+                    if (object["defTag"]) {
+                        addTabs(object["key"], object["value"], object["name"], !object["defTag"]);
+                    }
+                }
+            })
+        }
+
+        /**
+         * 仅新增及重置选中状态
+         * @param key 标签名，唯一
+         * @param value 对应路径
+         * @param name 显示的标签名
+         * @param delable 是否可删除
+         */
+        function addTabs(key, value, name, delable) {
+            if (!addNav) {
+                openFrame(value);
+                return;
+            }
+            // console.log("addTabs:" + key);
+            //1. 重置选中状态
+            if (curTab !== key) {
+                //当前选中标签变化，重置状态
+                if (tabMap.has(curTab)) {
+                    let last = document.getElementById(curTab);
+                    last.removeAttribute(ATTR_CLASS);
+                    last.setAttribute(ATTR_CLASS, STYLE_BLOCk);
+
+                    //将对应frame设为不可见
+                    let lastFrame = document.getElementById(FRAME_KEY_HEAD + curTab);
+                    lastFrame.style.display = VIEW_NONE;
+                }
+                curTab = key;
+
+                if (tabMap.has(key)) {
+                    //新增标签已创建，将其设为选中状态
+                    // console.log("该标签已存在，设为选中状态： " + key);
+                    let now = document.getElementById(key);
+                    now.removeAttribute(ATTR_CLASS);
+                    now.setAttribute(ATTR_CLASS, STYLE_BLOCk_SELECTED);
+
+                    //重新调整滚动条位置
+                    adjustScroll(key);
+
+                    //调整frame
+                    let nowFrame = document.getElementById(FRAME_KEY_HEAD + key);
+                    nowFrame.style.display = 'block';
+                } else {
+                    //未添加，则新增
+                    // console.log("新增标签:" + key);
+                    tabMap.set(key, value);
+
+                    let tab = document.createElement("div");
+                    tab.setAttribute(ATTR_ID, key);
+                    tab.setAttribute(ATTR_CLASS, STYLE_BLOCk_SELECTED);
+                    tab.addEventListener(LISTENER_TYPE_CLICK, function () {
+                        // console.log("显示： " + value);
+                        addTabs(key, value, name, delable);
+                    });
+                    //非默认标签带有删除按钮
+                    tab.innerText = name;
+
+                    if (delable) {
+                        let img = document.createElement("img");
+                        // img.setAttribute("th:src", "@{res/icon_del.png}");
+                        img.setAttribute(ATTR_CLASS, STYLE_DEL_ICON);
+                        img.setAttribute(ATTR_SRC, SRC_DEL);
+                        img.setAttribute("alt", "no");
+
+                        img.addEventListener(LISTENER_TYPE_CLICK, function (event) {
+                            // console.log("移除tab： " + key + ", " + event);
+                            removeTab(key);
+                            cancelBubble(event);
+                        });
+                        tab.appendChild(img);
+                    }
+                    navTabs.appendChild(tab);//添加子标签
+
+                    //新增标签，若超出总长度，自动滚动到最右边
+                    autoScroll(SCROLL_RIGHT, -1);
+
+                    //创建frame
+                    createFrame(key, value);
+                }
+            } else {
+                // console.log("该标签已选中：");
+            }
+        }
+
+        /**
+         * 移除添加的导航栏
+         * @param key
+         */
+        function removeTab(key) {
+            // console.log("removeTab：" + key);
+            if (tabMap.has(key)) {
+                //移除标签
+                let tab = document.getElementById(key);
+                navTabs.removeChild(tab);
+
+                //移除创建的frame
+                let frame = document.getElementById(FRAME_KEY_HEAD + key);
+                content.removeChild(frame);
+
+                tabMap.delete(key);
+
+                //重置选中状态：逆向添加顺序
+                let keys = Array.from(tabMap.keys());
+                let cKey = keys[keys.length - 1];
+                // console.log("重置选中状态：" + cKey + " key len: " + keys.length);
+                addTabs(cKey, tabMap.get(cKey), "", false);//仅涉及已有的tab
+            }
+        }
+
+        /**
+         * 创建frame
+         */
+        function createFrame(key, value) {
+            // console.log("createFrame：" + key);
+            let frame = document.createElement("iframe");
+            frame.setAttribute(ATTR_ID, FRAME_KEY_HEAD + key);
+            frame.setAttribute(ATTR_CLASS, STYLE_FRAME);
+            frame.setAttribute(ATTR_SRC, value);
+            frame.setAttribute("scrolling", "no");//禁止子页面滚动，由外部框架控制
+            // frame.setAttribute("onload", resetFrameHeight(frame));//这个有问题
+            frame.onload = function () {
+                resetFrameHeight(this);
+            };
+
+            content.appendChild(frame);
+        }
+
+        /**
+         * 仅第一次创建，后面直接更新网址
+         */
+        function openFrame(value) {
+            const unique = "unique";
+            let f = document.getElementById(FRAME_KEY_HEAD + unique);
+            if (f == null) {
+                createFrame(unique, value);
+            } else {
+                f.setAttribute(ATTR_SRC, value);
+            }
+        }
+
+        /**
+         * 防冒泡
+         * @param e
+         */
+        function cancelBubble(e) {
+            let event = e ? e : window.event || arguments.callee.caller.arguments[0];
+            if (event.stopPropagation) { //W3C
+                event.preventDefault();
+                event.stopPropagation();
+            } else { //IE
+                event.cancelBubble = true;
+            }
+        }
+
+        /**
+         * 当动态导航栏内容溢出时，溢出部分被隐藏，可向左、右滚动调整显示内容
+         * doc.scrollWidth/Height: 获取可以滚动的宽高(如果内容宽高比本身小,该值为本身宽高,否则就是内容的宽高)
+         * doc.scrollLeft/Top: 获取滚动距离（左侧、上侧） 简单地说就是滚动后被隐藏的宽度/高度。
+         * 需不自动换行；
+         */
+        function onLast() {
+            autoScroll(SCROLL_LEFT, scroll_tab);
+        }
+
+        //向右滑动
+        function onNext() {
+            autoScroll(SCROLL_RIGHT, scroll_tab);
+        }
+
+        //切换已创建的tab时，自动调节滚动条
+        function adjustScroll(aimKey) {
+            let left = 0;//目标tab距最左边距离
+            try {
+                tabMap.forEach(function (value, key) {
+                    if (key === aimKey) {
+                        //终止循环：return 仅终止function这一层，并没有终止foreach循环
+                        throw new Error("主动终止循环")
+                    }
+                    let tab = document.getElementById(key);
+                    left = left + tab.clientWidth + 5;//tab 左外缩进
+                });
+            } catch (e) {
+                // console.log(e.message);
+            }
+
+            let aimWidth = document.getElementById(aimKey).clientWidth;//目标tab宽度
+            if (navTabs.scrollLeft > left) {//已右移
+                if (navTabs.scrollLeft > (left + aimWidth)) {//目标在左边隐藏部分
+                    autoScroll(SCROLL_LEFT, navTabs.scrollLeft - aimWidth);
+                } else {
+                    autoScroll(SCROLL_LEFT, scroll_tab);
+                }
+            } else {//未滚动
+                if (navTabs.clientWidth < (left + aimWidth)) {//目标在右边隐藏部分
+                    autoScroll(SCROLL_RIGHT, left + aimWidth - navTabs.clientWidth);
+                }
+            }
+        }
+
+        /**
+         * 自动滚动定位
+         * @param direction 向左向右： left/right
+         * @param value 移动距离 -1(<0)： 滚动到最左或最右边
+         */
+        function autoScroll(direction, value) {
+            let over = navTabs.scrollWidth - navTabs.clientWidth;
+            if (over > 0) {//溢出，可滚动
+                let left = navTabs.scrollLeft;
+                let scrolled = 0;//已调节距离
+                if (value < 0) {//滚动到最左或最右边
+                    value = over;
+                }
+
+                if (direction === SCROLL_LEFT) {//左
+                    if (left > 0) {//已向右滚动
+                        let timerLeft = requestAnimationFrame(function scroll() {
+                            if (left > 0 && scrolled < value) {
+                                left = left - scroll_unit;
+                                scrolled = scrolled + scroll_unit;
+                                navTabs.scrollLeft = left > 0 ? left : 0;
+                                timerLeft = requestAnimationFrame(scroll);//迭代调用
+                            } else {
+                                cancelAnimationFrame(timerLeft);
+                            }
+                        });
+                    }
+                } else {//右
+                    if (left < over) {//不在最右边
+                        let timerRight = requestAnimationFrame(function scroll() {
+                            if (left < over && scrolled < value) {
+                                left = left + scroll_unit;
+                                scrolled = scrolled + scroll_unit;
+                                navTabs.scrollLeft = left < over ? left : over;
+                                timerRight = requestAnimationFrame(scroll);
+                            } else {
+                                cancelAnimationFrame(timerRight);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        /**
+         * 计算动态导航可用宽度
+         * clientWidth：width+padding
+         * 通过onresize来触发，在开始打开页面时不会触发，需手动补偿
+         */
+        function resetNavTabsWidth() {
+            // console.log("计算动态导航可用宽度");
+            let width = document.getElementById("nav").clientWidth - 105;//减去两端按钮
+            navTabs.style.width = width + 'px';//注意带单位
+
+            //自动变化滚动条位置
+            adjustScroll(curTab);
+        }
+
+        //通过获取子页面高度，设置iframe高度
+        function resetFrameHeight(obj) {
+            //1. 框架页面总高度（body）
+            // obj.height = document.body.scrollHeight;//document.documentElement.clientHeight;
+
+            //2. 子页面高度
+            try {
+                let child = obj.contentDocument;
+                if (child == null) {
+                    child = obj.contentWindow;
+                    if (child != null) {
+                        child = child.document;
+                    }
+                }
+
+                if (child != null) {
+                    //.documentElement;
+                    obj.height = child.body.scrollHeight + footer_height;//补偿底部固定栏
+                    // obj.height = temp > document.body.scrollHeight ? temp : document.body.scrollHeight;
+                    // console.log("子页面高度：" + body.scrollHeight);
+                    return;
+                }
+            } catch (e) {
+                // console.log(e.message);
+            }
+
+            // 获取子页面高度失败，赋予窗口高度
+            obj.height = document.body.scrollHeight;
+        }
+
+        /*在新页面查看图片*/
+        function viewImg(src) {
+            window.open(src, "_blank");
+        }
+
+        /*跳到顶部： 原根据标签跳转因header冻结显示无效*/
+        function backTop() {
+            document.documentElement.scrollTop = 0;
+        }
+
+        /**
+         * 打印对象
+         * @param obj
+         */
+        function writeObj(obj) {
+            let description = "";
+            for (let i in obj) {
+                let property = obj[i];
+                description += i + " = " + property + "\n";
+            }
+            console.log(description);
+        }
+    </script>
+
+    <style type="text/css">
+        /**自定义颜色变量：
+        1. 以--开头，后加变量名;
+        2. 使用 :root 作用域来定义全局变量;
+        3. 变量名是大小写敏感的;
+        4. 通过var(--var)获取;
+        */
+        :root {
+            /*顶部菜单栏*/
+            --hader-bg: #fff;
+            --header-border: #cdcdcd;
+
+            --menu-bg: #fff;
+            --menu-color: #000;
+            --menu-bg-select: #cdcdcd;
+            --menu-color-select: #00ff00;
+            --menu-bg-hover: #cdcdcd;
+            --menu-color-hover: #000;
+
+            /*顶部子菜单栏*/
+            --sec-menu-bg: #f9f9f9;
+            --sec-menu-cont-bg: #fff;
+            --sec-menu-cont-color: #000;
+            --sec-menu-cont-border: #00ff00;
+            --sec-menu-cont-bg-hover: #fff;
+            --sec-menu-cont-color-hover: #000;
+
+            /*动态导航栏*/
+            --nav-bg: #cdcdcd;
+            --nav-arrow-bg-hover: #666666;
+            --tab-block-bg: #666666;
+            --tab-block-color: #cdcdcd;
+            --tab-block-bg-select: #0d8ddb;
+            --tab-block-color-select: #fff;
+            --tab-block-bg-hover: #66ccff;
+            --tab-block-color-hover: #666666;
+            --tab-icon-bg-hover: #cdcdcd;
+
+            /*悬浮栏*/
+            --float-backtop-bg-hover: #cdcdcd;
+
+            /*页脚*/
+            --footer-border: #e7eaec;
+
+            /*其他*/
+            --ty-blue: #66ccff;
+        }
+
+        /*动画*/
+        @keyframes flashColor {
+            0% {
+                color: black;
+            }
+            10% {
+                color: red;
+            }
+            20% {
+                color: orange;
+            }
+            30% {
+                color: yellow;
+            }
+            40% {
+                color: green;
+            }
+            55% {
+                color: cyan;
+            }
+            70% {
+                color: blue;
+            }
+            85% {
+                color: purple;
+            }
+            100% {
+                color: white;
+            }
+        }
+
+        @-webkit-keyframes flashColor /* Safari 与 Chrome */
+        {
+            0% {
+                color: black;
+            }
+            10% {
+                color: red;
+            }
+            20% {
+                color: orange;
+            }
+            30% {
+                color: yellow;
+            }
+            40% {
+                color: green;
+            }
+            55% {
+                color: cyan;
+            }
+            70% {
+                color: blue;
+            }
+            85% {
+                color: purple;
+            }
+            100% {
+                color: white;
+            }
+        }
+
+        /**
+        1. 元素的高度如果设置为百分比的话，要么由内容撑开，要么由父元素得到，如果父元素没有高度，那么这个百分比是没有用的。
+        2. vertical-align: middle; 使自身垂直居中，仅控制自己
+        */
+        /*页面主体*/
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /*清除默认的留白*/
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /*顶部菜单栏*/
+        .header{
+            width: inherit;
+        }
+
+        .header_shadow {
+            width: inherit;
+            border-bottom: 1px solid var(--header-border);
+            box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .menu {
+            background-color: var(--hader-bg);
+            padding: 12px 10px;
+        }
+
+        /*网页logo*/
+        .logo {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .logo_img {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            vertical-align: middle;
+        }
+
+        .logo_txt {
+            display: inline-block;
+            vertical-align: middle;
+            /*color: white;*/
+            /*background: black;*/
+            font-size: 18px;
+            /*font-weight: bold;*/
+            font-family: Cursive, Fantasy, Monospace, sans-serif;
+            animation: flashColor 15s linear 0s infinite alternate;
+        }
+
+        .main_menu {
+            display: inline-block;
+            list-style-type: none;
+            vertical-align: middle;
+            margin: 0;
+            padding: 0;
+        }
+
+        .li_menu {
+            display: inline-block;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .li_menu a {
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .li_menu a:link {
+            color: var(--menu-color);
+        }
+
+        .li_menu a:hover {
+            color: var(--menu-color-select);
+            text-shadow: 3px 3px 3px var(--menu-bg-select);
+        }
+
+        /**顶部下拉菜单*/
+        .sub_menu {
+            position: relative;
+        }
+
+        /*鼠标移动到下拉框上时显示下拉菜单*/
+        .sub_menu:hover .sub_menu_cont {
+            display: block;
+        }
+
+        .sub_menu_cont {
+            display: none;
+            position: absolute;
+            background-color: var(--sec-menu-bg);
+            padding: 3px;
+            min-width: 100%;
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); /*让下拉菜单看起来像一个"卡片"*/
+        }
+
+        .sub_menu_cont a {
+            display: block;
+            color: var(--sec-menu-cont-color);
+            background: var(--sec-menu-cont-bg);
+            border-bottom: 1px dashed var(--sec-menu-cont-border);
+            font-size: 18px;
+        }
+
+        .sub_menu_cont a:last-child {
+            border-bottom: none;
+        }
+
+        /*.sub_menu_cont a:hover{*/
+        /*    color: var(--sec-menu-cont-color-hover);*/
+        /*    background: var(--sec-menu-cont-bg-hover);*/
+        /*}*/
+
+        /*动态导航栏*/
+        .nav {
+            display: block;
+            padding: 3px 5px;
+            background-color: var(--nav-bg);
+        }
+
+        .nav_arrow {
+            display: inline-block;
+            vertical-align: middle;
+            border: 1px solid transparent;
+            border-radius: 3px;
+        }
+
+        .nav_arrow:hover {
+            background: var(--nav-arrow-bg-hover);
+        }
+
+        .nav_tabs {
+            display: inline-block;
+            width: auto;
+            height: inherit;
+            margin: 0;
+            padding: 0;
+            vertical-align: middle;
+            overflow: hidden;
+            /*空白处理: 不换行*/
+            white-space: nowrap;
+            /*过渡效果*/
+            /*transition: all 0.5s ease-in-out;*/
+        }
+
+        .tab_block {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 6px;
+            border: 1px solid var(--tab-block-bg);
+            border-radius: 3px;
+            background: var(--tab-block-bg);
+            color: var(--tab-block-color);
+        }
+
+        .tab_block:not(:first-child) {
+            margin-left: 5px;
+        }
+
+        .tab_block:hover {
+            border-color: var(--tab-block-bg-hover);
+            background: var(--tab-block-bg-hover);
+            color: var(--tab-block-color-hover);
+            /*手指*/
+            cursor: pointer;
+        }
+
+        .tab_block_selected {
+            border-color: var(--tab-block-bg-select);
+            background: var(--tab-block-bg-select);
+            color: var(--tab-block-color-select);
+        }
+
+        .tab_icon_del {
+            width: 10px;
+            height: 10px;
+            padding: 1px;
+            margin-left: 5px;
+            border: 0.5px solid transparent;
+            border-radius: 10px;
+        }
+
+        .tab_icon_del:hover {
+            border-color: var(--tab-icon-bg-hover);
+            background: var(--tab-icon-bg-hover);
+        }
+
+        /*内容变化页*/
+        .content {
+            width: 100%;
+            /*height: 90%;*/
+        }
+
+        .frame {
+            border: none;
+            margin: 0;
+            width: 100%;
+            /*height: 100%;*/
+        }
+
+        /*固定漂浮内容:返回顶部*/
+        .float_backtop {
+            position: fixed;
+            bottom: 56px;
+            right: 20px;
+            transition: background-color 0.3s;
+            visibility: hidden;
+        }
+
+        .float_backtop:hover {
+            border-radius: 50%;
+            background-color: var(--float-backtop-bg-hover);
+        }
+
+        /*页脚*/
+        .footer {
+            background: none repeat scroll 0 0 white;
+            border-top: 1px solid var(--footer-border);
+            overflow: hidden;
+            padding: 8px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            font-size: 14px;
+        }
+
+        /*通用*/
+        .right {
+            float: right;
+        }
+
+        .left {
+            float: left;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .high_blue {
+            color: var(--ty-blue);
+        }
+    </style>
+</head>
+<body onload="initData()" onresize="resetNavTabsWidth()">
+<!--顶部菜单栏-->
+<div class="header" id="header">
+    <div class="menu" id="menu">
+        <!--logo图片及文本-->
+        <div class="logo" id="logo">
+            <img class="logo_img" id="logo_img" alt="Logo" onclick="viewImg(SRC_LOGO)" src="#"/>
+            <span class="logo_txt" id="logo_txt"></span>
+        </div>
+
+        <!--菜单栏-->
+        <ul class="main_menu" id="main_menu"></ul>
+    </div>
+
+    <!--动态导航栏-->
+    <div class="nav" id="nav">
+        <img class="nav_arrow" id="nav_arrow_left" src="#" alt="last" onclick="onLast()"/>
+        <nav class="nav_tabs" id="nav_tabs" onresize="resetNavTabsWidth()"></nav>
+        <img class="right nav_arrow" id="nav_arrow_right" src="#" alt="next" onclick="onNext()"/>
+    </div>
+</div>
+
+<!--frame 承载页, 内容页-->
+<div class="content" id="content"></div>
+
+<!--固定漂浮内容-->
+<div class="float_backtop" id="back_top">
+    <a href="#header">
+        <img id="back_top_img" src="#" width="32" height="32" alt="top" onclick="backTop()"/>
+    </a>
+</div>
+
+<!--页脚-->
+<div class="footer">
+    <div class="center">
+        Copyright © 2000-2222
+        <span class="high_blue">Virgo</span>
+        All Rights Reserved.
+    </div>
+</div>
+</body>
+</html>

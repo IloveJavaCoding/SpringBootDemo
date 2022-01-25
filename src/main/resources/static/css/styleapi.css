@@ -1,0 +1,8 @@
+@charset "utf-8";
+/**
+css 多文件引用
+*/
+
+@import "commonstyle.css";
+
+@import "htmlpage.css";

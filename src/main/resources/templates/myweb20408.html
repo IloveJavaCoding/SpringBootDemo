@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>  </title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		function init(){
+			
+		}
+		/*
+		window.onload=function (){
+		
+		};
+		*/
+	</script>
+	
+	<style type="text/css">
+	
+	</style>
+</head>
+<body onload="init();">
+	<script>
+		//case 1: 独立函数
+		function test(){
+			console.log(this);//在控制台上显示；
+			//this->window 物件；
+			console.log(this.innerWidth);
+		}
+		test();
+		
+		//case 2: 对象 
+		let obj={//obj 为对象；
+			x:3,
+			test:function(){
+				console.log(this);//对象内的成员变量：x,test();
+				console.log(this.x);
+			}
+		};
+		obj.test();
+		
+		//case 3:事件处理，监控器
+		document.addEventListener("click",function(){
+			console.log(this);//this->触发事件的对象物件；
+			this.body.innerHTML="Clicked";
+		});
+		
+		// case 4: 建构函数；
+		function test1(){
+			console.log(this);//this->浏览器帮我们新建的空白物件；
+			this.x=3;
+			this.y=4;
+		}
+		let p=new test1();
+		console.log(p);
+		
+		//重新绑定物件；
+		//fun.bind();
+		function test2(){
+			console.log(this);//在控制台上显示；
+			//this->window 物件；
+		}
+		test2();
+		let test3=test2.bind({x:3});
+		test3();
+		
+		//use apply 呼叫函数；
+		function add(a,b){
+			console.log("Result:",a+b);
+			console.log("Bind:",this);
+		}
+		add(3,4);
+		add.apply({b:7},[3,4]);
+		
+		//call;
+		add.call({a:6},3,4);
+	</script>
+</body>
+</html>

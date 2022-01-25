@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Event Object</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		function init(){
+			var b1=document.getElementById("btn");
+			var handler=function(){
+				//b1.style.color="#66ccff";
+				alert("Hello");
+			};
+			b1.addEventListener("click", handler);
+			
+			document.addEventListener("keydown", function(e){
+				alert(e.key+"->"+e.keyCode);
+				});//匿名函数；
+		}
+	</script>
+	
+	<style type="text/css">
+	
+	</style>
+</head>
+<body onload="init()">
+	<button id="btn">BUT</button>
+</body>
+</html>

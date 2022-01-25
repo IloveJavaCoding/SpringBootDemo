@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTML DOM</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">
+		//alert(window.screen.width+"x"+window.screen.height);
+		var n=1;
+		function change(){
+			var obj=window.document.getElementById("001");//window.->can be ignored;
+			if(n/2!=0){//odd
+				obj.innerHTML="kill";
+				obj.style.color="#66ccff";
+			}else{//even
+				obj.innerHTML="kiss";
+				obj.style.color="#6600ff";
+				obj.style.fontWeight="bold";
+			}
+			n++;
+			//window.document.body.innerHTML="Hello!";
+		}
+		function display(){
+			alert(n);
+		}
+	</script>
+</head>
+<body>
+	<div>
+		I want to <span id="001">kiss</span> you!
+	</div>
+	<button onclick="change()">Change</button>
+	<button onclick="display()">N</button>
+</body>
+</html>

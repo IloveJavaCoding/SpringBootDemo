@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>选择器</title>
+	<style type="text/css">
+	/*标签名称选择器-> 设定整个网页文字的基本大小 */
+	body{font-size:15px; font-family:"华文楷体"}
+	h3{font-size:25px;text-decoration:underline;font-family:"仿宋"}
+	
+	/*class选择器*/
+	div.content{font-size:15px;border:1px dashed #66ccff; width:400px;padding:5px}
+	
+	/*id 选择器*/
+	#bto{border:1px solid #0000ff; background-color:#ffffff}
+	
+	/*虚拟选择器*/
+		/*1. hover */
+	#bto:hover{background-color:#888888}
+		/*2. focus*/
+	input:focus{border:2px solid #ff0000}
+	
+	/*阶层式选择器*/
+	.link a{color: #0000ff}
+	.work a{color: #00ff00}
+	</style>
+</head>
+<body>
+	<h3>自我介绍</h3>
+	<div class="content">My name is Zhang Samuel</div>
+	<h3>我的链接</h3>
+	<ul class="link">
+		<li><a href="https:www.google.com/">google</a></li>
+		<li><a href="https:www.sougou.com/">sougou</a></li>
+		<li><a href="https:www.taobao.com/">taobao</a></li>
+	</ul>
+	<h3>我的作品</h3>
+	<ul class="work">
+		<li><a href="https://pan.baidu.com/s/103UAFzWPUEBe27ZpocdRjg">java code(pkka)</a></li>
+		<li><a href="myweb0128.html">html</a></li>
+	</ul>
+	<h3>和我联系</h3>
+	<div>
+	填写信息<input type="text" /><button id="bto">发送</button>
+	</div>
+</body>
+</html>

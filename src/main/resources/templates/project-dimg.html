@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bubble-Img</title>
+    <meta charset="utf-8" http-equiv="Content-Type" content="text/html"/>
+    <script type="text/javascript">//javascript codes;
+    var canvas;
+    var cxt;
+    var Img = new Image();
+    var W, H;
+
+    function init() {
+        canvas = document.getElementById("canvas");
+        cxt = canvas.getContext("2d");
+        canvas.width = window.outerWidth;
+        canvas.height = window.outerHeight;
+        W = canvas.width;
+        H = canvas.height;
+
+        Img.src = "../static/res/img_bg.jpg";
+        /*
+        Img.onload=function(){
+            cxt.drawImage(this,0,0,canvas.width,canvas.height);
+        };
+        */
+    }
+
+    function random(min, max) {
+        return Math.round(Math.random() * (max - min)) + min;
+    }
+
+    function random2(min, max) {
+        return Math.random() * (max - min) + min;
+    }
+
+    function Circle() {
+        this.x = Math.random() * W;
+        this.y = H;
+        this.r = random(1, 10);
+        //draw the circle;
+        this.draw = function () {
+            /*
+            this.R=random(0,255);
+            this.G=random(0,255);
+            this.B=random(0,255);
+            this.A=random2(0,1);
+            cxt.fillStyle="rgba("+this.R+","+this.G+","+this.B+","+this.A+")";
+            */
+            cxt.fillStyle = "rgba(255,255,255,0.56)";
+            cxt.beginPath();
+            cxt.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            cxt.closePath();
+            cxt.fill();
+        }
+        //move;
+        this.move = function () {
+            this.y -= 0.67;//go up;
+            this.r += 0.015;
+            if (random2(0, 2) > 1 && random2(0, 2) > 1) {
+                if (random2(0, 2) > 1) {
+                    this.x += 0.48;
+                } else {
+                    this.x -= 0.48;
+                }
+            }
+        }
+    }
+
+    var circles = [];//define a no length array;
+    //create a new circle;
+    function createCir() {
+        var cir = new Circle();
+        circles.push(cir);
+    }
+
+    //control the moving of the circle after that was created;
+    function Redraw() {
+        for (var i = 0; i < circles.length; i++) {
+            circles[i].draw();
+            circles[i].move();
+        }
+    }
+
+    function Remove() {
+        for (var i = 0; i < circles.length; i++) {
+            circles.move();
+        }
+    }
+
+    var timer = "";
+    setInterval(function () {
+        cxt.globalAlpha = 0.5;
+        cxt.drawImage(Img, 0, 0, 1280, 1320);//the actually size of the image;
+        timer++;
+        if (timer % 20 == 0) {
+            createCir();
+        }
+        Redraw();
+    }, 10);
+
+    function moveCir() {
+        //cxt.drawImage(Img,0,0,W,H);
+        for (var k = 0; k < circles.length; k++) {
+            circles[k].move();
+        }
+    }
+
+    setInterval(moveCir, 1000 / 60);
+
+
+    /*
+    window.onresize=function(){
+        canvas.width=window.innerWidth;
+        canvas.height=window.innerHeight;
+    }
+    */
+
+
+
+    /*
+    window.onload=function (){
+
+    };
+    */
+    </script>
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body onload="init();">
+<canvas id="canvas"/>
+</body>
+</html>

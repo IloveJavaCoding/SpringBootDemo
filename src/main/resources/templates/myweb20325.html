@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>  </title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		function init(){
+			var vas=document.getElementById("vas");
+			var ctx=vas.getContext("2d");//get canvas context object;
+			//1. fill;
+			ctx.fillStyle="blue";
+			ctx.globalAlpha=0.8;//opacity;
+			ctx.fillRect(20,20,50,50);
+			//2. stroke;
+			ctx.globalAlpha=1;
+			ctx.strokeStyle="#66ccff";
+			ctx.strokeRect(100,50,10,10);
+			//3. path;
+			ctx.beginPath();
+			ctx.moveTo(200,20);
+			ctx.lineTo(235,120);
+			ctx.lineTo(145,55);
+			ctx.lineTo(255,55);
+			ctx.lineTo(165,120);
+			ctx.closePath();
+			ctx.strokeStyle="#eaacff";
+			ctx.stroke();
+		}
+	</script>
+	
+	<style type="text/css">
+		.can{width:800px; height:500px; border:1px solid #66ccff}
+	</style>
+</head>
+<body onload="init();">
+	<canvas class="can" id="vas"></canvas>
+</body>
+</html>

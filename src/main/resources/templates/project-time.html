@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Time</title>
+	<meta charset="utf-8" http-equiv="Content-Type" content="text/html"/>
+	<script type="text/javascript">//javascript codes;
+		var clo;
+		var date;
+		var timer;
+		function init(){
+			clo=document.getElementById("clock");
+			date=document.getElementById("date");
+			timer=document.getElementById("timer");
+			getdate();
+		}
+		var Mtime;
+		var Mdate;
+		//set time
+		function clock(){
+			var time=new Date();
+			var h,m,s;
+			if(time.getHours()<=9){
+				h="0"+time.getHours();
+			}else{
+				h=time.getHours();
+			}
+			
+			if(time.getMinutes()<=9){
+				m="0"+time.getMinutes();
+			}else{
+				m=time.getMinutes();
+			}
+			
+			if(time.getSeconds()<=9){
+				s="0"+time.getSeconds();
+			}else{
+				s=time.getSeconds();
+			}
+			Mtime=h+":"+m+":"+s;
+			
+			clo.value=Mtime;//reset the value of the input block;
+		}
+		var settime=setInterval(clock,500);//every 0.1s update the value;
+		
+		function stopTime(){
+			clearInterval(settime);
+		}
+		function startTime(){
+			settime=setInterval(clock,500);
+		}
+		
+		//set date
+		function getdate(){
+			var dat=new Date();
+			var m=dat.getMonth()+1;
+			var d=dat.getDate();
+			if(m<=9){
+				m="0"+m;
+			}
+			if(d<=9){
+				d="0"+d;
+			}
+			Mdate=dat.getFullYear()+":"+m+":"+d;
+			date.value=Mdate;
+		}
+		
+		var setdate=setInterval(getdate,100000);
+		
+		function stopDate(){
+			clearInterval(setdates);
+		}
+		function startDate(){
+			setdate=setInterval(getdate,1000);
+		}
+		
+		//set timer;
+		var num=0;//0.1s;
+		function setTimer(){
+			num++;
+			var m=Math.floor(num/6000);
+			var s=Math.floor((num-6000*m)/100);
+			var ms=num-6000*m-100*s;
+			
+			if(m<=9){
+				m="0"+m;
+			}
+			if(s<=9){
+				s="0"+s;
+			}
+			if(ms<=9){
+				ms="0"+ms;
+			}
+			
+			timer.value=m+":"+s+":"+ms;
+		}
+		var settimer;
+		
+		function startTimer(){
+			settimer=setInterval(setTimer,10);
+		}
+		function stopTimer(){
+			clearInterval(settimer);
+		}
+		function resetTimer(){
+			clearInterval(settimer);
+			num=0;
+			settimer=setInterval(setTimer,10);
+		}
+		/*
+		window.onload=function (){
+		
+		};
+		*/
+	</script>
+	
+	<style type="text/css">
+	
+	</style>
+</head>
+<body onload="init();">
+	<input type="text" id="clock" size="30"/>
+	<button onclick="stopTime();">Stop</button>
+	<button onclick="startTime();">Start</button>
+	<input type="text" id="date" size="30" />
+	<button onclick="stopDate();">Stop</button>
+	<button onclick="startDate();">Start</button>
+	
+	<input type="text" id="timer" size="30" />
+	<button onclick="startTimer();">Start</button>
+	<button onclick="stopTimer();">Stop</button>
+	<button onclick="resetTimer();">Reset</button>
+</body>
+</html>

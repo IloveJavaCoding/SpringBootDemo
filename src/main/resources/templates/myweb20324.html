@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>canvas2</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		var vas;
+		var ctx;
+		
+		window.onload=function (){
+			vas=document.getElementById("vas");
+			ctx=vas.getContext("2d");
+			//load image;
+			/*
+			var img=new Image();
+			img.src="123.jpg";
+			img.onload=function(){
+				ctx.drawImage(this,0,0,vas.width,vas.height);
+			};
+			*/
+		};
+		function Invert(){
+			var pixels=ctx.getImageData(0, 0, vas.width, vas.height);//bugs;
+			var data=pixels.data;//data store the pixels;
+			for(var i=0;i<data.length;i+=4){
+				data[i]=255-data[i];
+				data[i+1]=255-data[i+1];
+				data[i+2]=255-data[i+2];
+			}
+			ctx.putImageData(pixels,0,0);
+		}
+		//select a image from the local store;
+		var name;
+		function loadFile(input){
+			var file=input.files[0];
+			name=file.name;//get the name of the origin image;
+			var src=URL.createObjectURL(file);//creat a URL;
+			var img=new Image();
+			img.src=src;
+			img.onload=function(){
+				ctx.drawImage(this,0,0,vas.width,vas.height);
+			};
+		}
+		function saveFile(){
+			var link=document.getElementById("download");
+			link.download=name;//the new name of the save image;
+			link.href=vas.toDataURL("image/jpeg");
+			link.click();//trigger;
+		}
+		
+	</script>
+	
+	<style type="text/css">
+		.can{width:800px; height:600px; border:1px solid #66ccff}
+	</style>
+</head>
+<body>
+<div>
+	<input type="file" onchange="loadFile(this);"/>
+	<button onclick="Invert();">Invert</button>
+	<button onclick="saveFile();">Save</button>
+	<a id="download"></a>
+</div>
+	<canvas class="can" id="vas"></canvas>
+</body>
+</html>

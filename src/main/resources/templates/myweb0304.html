@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Html Dom2</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">
+		function MenuC(num){
+			var m=document.getElementById("item"+num);
+			m.classList.toggle("hide");//切换标签物件class 的hide设定；toggle->触发器。
+			/*
+			if(m.style.display=="none"){
+				m.style.display="block";
+			}else{
+				m.style.display="none";//hidden;
+			}
+			*/
+		}
+		function ChangeC(){
+			var i=document.getElementById("t1");
+			i.classList.toggle("Ncolor");
+		}
+	</script> 
+	<style type="text/css">
+		.hide{display:none;}
+		.Ncolor{color:#66ccff; font-weight:bold;}
+	</style>
+</head>
+<body>
+	<div onclick="MenuC(1);" id="t1">Title 1</div>
+	<button onclick="ChangeC();">change</button>
+	<ul id="item1">
+		<li>item 1</li>
+		<li>item 2</li>
+		<li>item 3</li>
+	</ul>
+	
+	<div onclick="MenuC(2);">Title 2</div>
+	<ul id="item2">
+		<li>item 1</li>
+		<li>item 2</li>
+		<li>item 3</li>
+	</ul>
+	
+	<div onclick="MenuC(3);">Title 3</div>
+	<ul id="item3">
+		<li>item 1</li>
+		<li>item 2</li>
+		<li>item 3</li>
+	</ul>
+</body>
+</html>

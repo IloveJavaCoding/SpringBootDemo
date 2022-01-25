@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Rainy</title>
+	<meta charset="utf-8" http-equiv="Content-Type" content="text/html"/>
+	<script type="text/javascript">//javascript codes;
+		var canvas;
+		var cxt;
+		var W,H;//the width and height of the broswer;
+		var maxR=50;//the max radius of the circle;
+		var minA=0.2;//control 
+		function initial(){
+			canvas=document.getElementById("rain");
+			cxt=canvas.getContext("2d");
+			W=window.innerWidth;
+			H=window.innerHeight;
+			//set the width and height of the canvas;
+			canvas.width=W;
+			canvas.height=H;
+			//createRain();//a drop of rain;
+		}
+		
+		//self adjust the size of the canvas with the change of the window;
+		window.onresize=function(){
+			canvas.width=window.innerWidth;
+			canvas.height=window.innerHeight;
+		}
+		
+		//update the background;
+		setInterval(function(){
+			cxt.fillStyle="rgba(0,0,0,0.05)";//the a can control the total length of the drop;
+			cxt.fillRect(0,0,W,H);
+		},1000/60);
+		
+		function random(min,max){
+			return Math.random()*(max-min)+min;
+		}
+		
+		function generate_random(min,max){
+			return Math.floor(Math.random()*(max-min) +min);
+		}
+		
+		//---------------------------------main part:-------------------------------
+
+		//declare:
+		function Rain(){};
+		//define:
+		Rain.prototype={
+			init:function(){//define the member var;
+				this.x=random(0,W);//control the inital position of the drop;
+				this.y=H;
+				//this.ite=0;
+				this.v=random(3,5);//control the speed of downing;
+				this.r=random(0.5,0.8);//the initial radius of the circle;
+				this.vr=random(0.8,1.1);//the speed of the add of the radius of the circle;
+				this.h=random(10,130);//the end spot of the drop;
+				this.a=random(0.5,1.1);//control the initial opacity of the circle;
+				this.va=0.96;//the speed of the change of the a;
+				
+				this.R = generate_random(0,255);
+				this.G = generate_random(0,255);
+				this.B = generate_random(0,255);
+				
+			},
+			draw:function(){
+				if(this.y>this.h){//downing progress;
+					cxt.fillStyle="rgb("+this.R+","+this.G+","+this.B+")";//the color of the drop;
+					cxt.fillRect(this.x,this.y,random(1,2),8);//the shape of the drop;
+				}else{//get the end spot;
+					if(this.a>minA){
+						cxt.strokeStyle="rgb("+this.R+","+this.G+","+this.B+","+this.a+")";//with the change of the a,get the gradient effect;
+					}else{
+						cxt.strokeStyle="rgba(0,0,0,0)";
+					}
+					cxt.beginPath();
+					cxt.arc(this.x,this.y,this.r,0,Math.PI*2);//the shape of the ripple;
+					cxt.closePath();
+					cxt.stroke();
+				}
+			},
+			move:function(){
+				if(this.y>this.h){//downing
+					//this.y=4.9*(1000/60)*this.ite^2;
+					//this.ite++;
+					this.y-=this.v; //y=y+t*v; -> constant speed;
+				}else{//get the end spot;
+					if(this.a>minA){//control the disapper of the ripple;
+						this.r+=this.vr;//the circle is becoming bigger;
+							if(this.r>maxR){
+								this.a*=this.va;
+							}
+					}else{
+						this.init;//a new drop appear;
+					}
+				}
+				this.draw();
+			}
+		}
+		
+		var rainArray=[];
+		function createRain(){
+			var rain=new Rain();
+			rain.init();
+			
+			rain.move();
+			rainArray.push(rain);
+		}
+		
+		setInterval(createRain,150*(random(0.5,2.56)));//forever rainy;
+		
+		/*
+		for(var i=0;i<5;i++){
+			setTimeout(createRain,200*i);
+			setInterval(createRain,1000*i);//constant speed to generate a drop;
+		}
+		*/
+		//
+		function moveRain(){
+			cxt.fillStyle="rgba(0,0,0,0.05)";
+			cxt.fillRect(0,0,W,H);
+			for(var k=0;k<rainArray.length;k++){
+				rainArray[k].move();
+			}
+		}
+		
+		setInterval(moveRain,1000/60);
+	</script>
+	
+	<style type="text/css">
+		body{
+			margin:0;
+		}
+		#rain{
+			display:block;
+			background-color:black;
+			width:100%;
+			heigth:100%;
+		}
+	</style>
+</head>
+<body onload="initial();">
+	<canvas id="rain"/>
+</body>
+</html>

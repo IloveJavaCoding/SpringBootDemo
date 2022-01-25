@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>css-3</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		function init(){
+			
+		}
+	</script>
+	
+	<style type="text/css">
+		.box1{
+		width:100px; height:100px; background-color:#66ccff;
+		opacity:0.7; border-radius:15px;
+		box-shadow:10px 10px 5px #000000; /*1.左右偏移 2.上下偏移 3. 扩散程度 4. 颜色*/
+		text-shadow:2px 2px 2px #ffffff; 
+		}
+		.box2{
+		width:100px; height:100px; background-color:#ff0000;
+		}
+		.box3{
+		width:100px; height:100px; background-color:#ff0000;
+		/*移动*/
+		transform:translate(100px,50px);/*1.左右偏移 2.上下偏移*/
+		}
+		.box4{
+		width:100px; height:100px; background-color:#ff0000;
+		/*缩放*/
+		transform:scale(1.5,0.5);/*1. a*width 2. b*height*/
+		}
+		.box5{
+		width:100px; height:100px; background-color:#ff0000;
+		/*旋转*/
+		transform:rotate(45deg);/*以中心为旋转点*/
+		}
+		.box6{
+		width:100px; height:100px; background-color:#ff0000;
+		/*歪斜*/
+		transform:skew(0deg,30deg);
+		}
+		
+		
+		.cube>.box7{
+		width:200px; height:80px; background-color:#ff0000;
+		transform:skew(-45deg,0deg) translate(40px,0px);
+		opacity:0.8;
+		}
+		.cube>.box8{
+		width:200px; height:300px; background-color:#00ff00;
+		display:inline-block;
+		}
+		.cube>.box9{
+		width:80px; height:300px; background-color:#0000ff;
+		display:inline-block;
+		transform:skew(0deg,-45deg) translate(0px,-40px) scale(1.0,1.0);
+		opacity:0.7;
+		}
+		</style>
+</head>
+<body onload="init();">
+	<div class="box1">Hello</div>
+	<br/>
+	<hr/>
+	<div class="box2">原图</div>
+	<hr/>
+	<div class="box3">translate(100px,50px)</div>
+	<hr/>
+	<div class="box4">scale(1.5,0.5)</div>
+	<hr/>
+	<div class="box5">rotate(45deg)</div>
+	<hr/>
+	<div class="box6">skew(0deg,30deg)</div>
+	<hr/>
+	<br/>
+	<br/>
+	<div class="cube">
+		<div class="box7"></div>
+		<div class="box8"></div><div class="box9"></div>
+	</div>
+</body>
+</html>

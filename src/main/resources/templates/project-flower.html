@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Flower</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		var canvas,canvas2;
+		var cxt,cxt2;
+		var deg=0;
+		var deg2=0;
+		//Ellipse
+		var p=new Array(0,0);//control the shape of the graphic;
+		var p1=new Array(10,0);
+		var A=65;
+		var B=15;
+		//rhombus
+		var P1=new Array(5,5);//control the shape of the graphic;
+		var P2=new Array(0,1);
+		var W=30;
+		var H=30;
+		
+		function init(){
+			canvas=document.getElementById("can");
+			cxt=canvas.getContext("2d");
+			
+			canvas2=document.getElementById("can2");
+			cxt2=canvas2.getContext("2d");
+			init2();
+		}
+		
+		window.onresize=function(){
+			canvas.width=window.innerWidth;
+			canvas.height=window.innerHeight/4;
+			
+			canvas2.width=window.innerWidth;
+			canvas2.height=window.innerHeight/4;
+		}
+		
+		//draw rhombus
+		function drawrhom(g,o,w,h,color){//g->画布, a,b->c长短轴;
+			g.strokeStyle=color;
+			g.beginPath();
+			g.rect(o[0],o[1],w,h);
+			g.closePath();
+			g.stroke();
+		}
+		
+		//draw Ellipse
+		function drawEllipse(g,o,a,b,color){//g->画布, a,b->c长短轴;
+			g.strokeStyle=color;
+			g.beginPath();
+			for(var i=0;i<=360;i++){
+				var ii=i*Math.PI/180;
+				var x=o[0]+a*Math.cos(ii);
+				var y=o[0]-b*Math.sin(ii);
+				cxt.lineTo(x,y);
+			}
+			g.closePath();
+			g.stroke();
+		}
+		
+		function redraw(){
+			//保持状态；
+			cxt.save();
+			//清理图像；
+			//cxt.clearRect(0,0,canvas.width,canvas.height);
+			cxt.translate(150,75);//移动图形；
+			deg+=Math.PI/12;
+			cxt.rotate(deg);
+		
+			cxt.beginPath();
+			drawEllipse(cxt,p1,10,5,"#ff0000");
+			drawEllipse(cxt,p,A,B,"#ffff00");
+			cxt.closePath();
+			
+			//恢复状态；
+			cxt.restore();
+		}
+		
+		function redraw2(){
+			//保持状态；
+			cxt2.save();
+			//清理图像；
+			//cxt.clearRect(0,0,canvas.width,canvas.height);
+			cxt2.translate(150,75);//移动图形；
+			deg2+=Math.PI/8;
+			cxt2.rotate(deg2);
+			//cxt.skew(0,30);
+			
+			cxt2.beginPath();
+			drawrhom(cxt2,P1,W,H,"#66ccff");
+			drawrhom(cxt2,P2,W,H,"#0fccff");
+			cxt2.closePath();
+			
+			//恢复状态；
+			cxt2.restore();
+		}
+		
+		var t1,t2;
+		var col="#66ccff";
+		function init2(){
+			t1=setInterval(redraw,500);//每1s 画一次；
+			t2=setInterval(redraw2,500);//每1s 画一次；
+			//self stop; 
+			//setTimeout(stop1,10000);
+			//setTimeout(stop2,5500);
+		}
+		
+		function stop(){
+			clearInterval(t1);
+			clearInterval(t2);
+		}
+		function stop1(){
+			clearInterval(t1);
+		}
+		function stop2(){
+			clearInterval(t2);
+		}
+		
+		function changeC(){
+			
+		}
+		/*
+		window.onload=function (){
+		
+		};
+		*/
+	</script>
+	
+	<style type="text/css">
+		.can{width:100%; height:50%; border:1px solid #ff0000}
+	</style>
+</head>
+<body onload="init();">
+	<canvas id="can" class="can"></canvas>
+	<canvas id="can2" class="can"></canvas>
+	<button onclick="stop1();">stop1</button>
+	<button onclick="stop2();">stop2</button>
+	<button onclick="stop();">stop</button>
+	<button onclick="changeC();">changeColor</button>
+</body>
+</html>

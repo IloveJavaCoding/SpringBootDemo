@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html> 
+<head>
+	<title>web layout</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scal=1" />
+	<style type="text/css">/*可用于手机网页排版 按F12*/
+	/*text-align:center: 文本的对齐方式*/
+	.head{
+		background-color:#66ccff; color:white; font-weight:bold; 
+		font-family:"华文行楷"; font-size:25px; text-align:center;
+		padding:12px;
+		}
+		
+	.content{
+		width:1000px;margin-left:auto; margin-right:auto;
+	}
+	/*padding:填充 margin: 与其他对象保持距离 display:inline-block; 以block区块的方式呈现*/
+	.box{
+		height: 300px; width:280px; padding:10px; margin:15px; background-color:#9aff9a;
+		display:inline-block; vertical-align:top; text-align:center
+	}
+	
+	.title{
+		color:black; font-weight:bold; font-family:"仿宋"; font-size:20px;
+		text-align:center；
+	}
+	
+	.text{
+		color:white; padding:15px;
+	}	
+	/*条件判断*/
+	@media screen and (max-width: 600px){
+		.content{
+		width:100%; text-align:center
+		}
+	
+	}
+	</style>
+</head>
+<body style="margin:0px">
+	<div class="head">美好的一天</div>
+	<div class="content">
+		<div class="box"> 
+			<div class="title">早晨</div>
+			<div class="text">两个鸡蛋，一个饼；<br/>
+				一杯牛奶，一个苹果。<br/>
+				美好的一天就这样开始了！
+			</div>
+		</div>
+		<div class="box">
+			<div class="title">中午</div>
+			<div class="text">
+				水煮鱼；<br/>
+				宫保鸡丁；<br/>
+				肉末茄子；<br/>
+				小白菜；<br/>
+				金针菇汤。<br/>
+				满满能量,努力，奋斗！
+			</div>
+		</div>
+		<div class="box">
+			<div class="title">晚上</div>
+			<div class="text">
+				一碗混沌，外加一杯奶茶。<br/>
+				吃完散个步，美梦等我入！
+			</div>
+		</div>
+	</div>
+</body>
+</html>

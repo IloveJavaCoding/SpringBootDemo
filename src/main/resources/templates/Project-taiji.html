@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>旋转太极</title>
+	<meta charset="utf-8"/>
+	<script type="text/javascript">//javascript codes;
+		var canvas;
+		var cxt;
+		var deg=0;//rotate degree
+		var r=50;
+		var pX=0;
+		var pY=0;
+		
+		function init(){
+			canvas=document.getElementById("can");
+			cxt=canvas.getContext("2d");
+			init2();
+		}
+		
+		//draw 
+		function pie(g,rad,sAngle,eAngle,color,x,y){//g->画布;rad->r of the circle;x,y->center point of the circle;
+			g.fillStyle=color;
+			g.beginPath();
+			g.arc(x,y,rad,sAngle,eAngle,true);//画弧，x,y->圆心坐标；rad->半径；
+			g.closePath();
+			g.fill();
+		}
+		
+		function redraw(){
+			//保持状态；
+			cxt.save();
+			//清理图像；
+			cxt.clearRect(0,0,canvas.width,canvas.height);
+			cxt.translate(150,75);//移动图形；
+			deg+=Math.PI/6;
+			cxt.rotate(deg);
+			
+			cxt.beginPath();
+			//draw two big circle  pi -> half circle;
+			pie(cxt,r,1/2*Math.PI,3/2*Math.PI,"#000000",pX,pY);
+			pie(cxt,r,3/2*Math.PI,5/2*Math.PI,"#ffffff",pX,pY);
+			//0-2pi -> a circle;
+			pie(cxt,r/2,0,Math.PI*2,"#000000",pX,pX+r/2);
+			pie(cxt,r/2,0,Math.PI*2,"#ffffff",pX,pY-r/2);
+			//
+			pie(cxt,r/6,0,Math.PI*2,"#000000",pX,pY-r/2);
+			pie(cxt,r/6,0,Math.PI*2,"#ffffff",pX,pY+r/2);
+			cxt.closePath();
+			
+			//恢复状态；
+			cxt.restore();
+		}
+		
+		function init2(){
+			redraw();
+			setInterval(redraw, 300);//每0.5s 画一次；
+		}
+		
+		/*
+		window.onload=function (){
+		
+		};
+		*/
+	</script>
+	
+	<style type="text/css">
+		.can{width:800px; height:400px; background-color:#ffff00; border:1px solid #ff0000}
+	</style>
+</head>
+<body onload="init();">
+	<canvas id="can" class="can"></canvas>
+</body>
+</html>

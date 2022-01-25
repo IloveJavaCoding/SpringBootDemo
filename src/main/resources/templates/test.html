@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+    <script type="text/javascript">
+        function types() {
+            var str = "str";
+            console.log(typeof (str));
+
+            var number = 123;
+            console.log(typeof (number));
+
+            var array = [];
+            console.log(typeof (array));
+        }
+
+        function str() {
+            var str = "aa,bc,dc,sd";
+            var strs = str.split(',');
+            console.log("strs len: " + strs.length);
+            strs.forEach(function (obj) {
+                console.log(obj);
+            });
+
+            var index = str.search("b");
+            console.log("在str中查找b: " + index);
+
+            index = str.indexOf("cd");
+            console.log("在str中查找cd: " + index);
+
+        }
+
+        function num() {
+            var num = 100;
+            var t = num/3;
+            console.log(t + ", " + typeof t);
+            var t2 = t.toFixed(2);
+            console.log("保留两位小数：" + t2 +", " + typeof t2)
+        }
+
+        function array() {
+            var array = [];
+            array.push("123");
+            array.push("321");
+            // var len = array.push("231");
+            var len = array.length;
+            console.log("array len: " + len + ", " + typeof array);
+        }
+
+        function map() {
+            var map = new Map();
+            map.set("1", "a");
+            map.set("2", "b");
+            map.set("3", "c");
+            map.set("4", "d");
+            map.set("5", "e");
+
+            console.log("map len: " + Object.keys(map).length + ", " + typeof map);
+            map.forEach(function (value, key, map) {
+                if(key==='3'){
+                    console.log("强行终止！")
+                    return false;
+                }
+                console.log("key " + key + ", value " + value);
+            })
+
+            var keys = Array.from(map.keys());
+            keys.forEach(function (obj) {
+                console.log("key " + obj);
+            })
+        }
+    </script>
+</head>
+<body>
+<input type="button" value="type" onclick="types()">
+<br/>
+<input type="button" value="str" onclick="str()">
+<br/>
+<input type="button" value="num" onclick="num()">
+<br/>
+<input type="button" value="array" onclick="array()">
+<br/>
+<input type="button" value="map" onclick="map()">
+<br/>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>css3-flexbox</title>
+	<meta charset="utf-8" />
+<!--	<link href="style.css" rel="stylesheet" type="text/css" media="all" />-->
+	<style type="text/css">
+		main{/*容器*/
+			display:flex;/*flex 缩放*/
+			flex-wrap:wrap;/*自动换行*/
+			justify-content:center;/*水平方向对齐；flex-start 靠左；flex-end 靠右*/
+			background-color:#66ccff;
+			/*align-items:center;/*垂直方向对齐；默认值为：stretch*/
+		}
+
+		main>.item{
+			flex:none;
+			width:250px;
+			margin:10px;
+			background-color:#ff0000;
+			text-align:center;
+			padding:15px;
+			color:#ffffff;
+		}
+
+		@media (max-width:1200px){
+			main>.item{
+				width:45%;
+			}
+		}
+
+		@media (max-width:500px){
+			main>.item{
+				width:90%;
+			}
+		}
+
+		body{margin:0px;}
+
+		nav{
+			display:flex;
+			text-align:center;
+		}
+
+		nav>.logo{
+			flex:none;
+			width:100px;
+			background-color:#ff0000;
+		}
+		nav>.menu{
+			flex:auto;
+			background-color:#00ff00;
+		}
+		nav>.user{
+			flex:none;
+			width:100px;
+			background-color:#0000ff;
+		}
+	</style>
+</head>
+<body>
+	<nav>
+		<div class="logo">Logo</div>
+		<div class="menu">Menu</div>
+		<div class="user">User</div>
+	</nav>
+	<main>
+		<div class="item">New1<br/>2019-02-04 除夕</div>
+		<div class="item">New2<br/>2019-02-05 春节</div>
+		<div class="item">New3<br/>2019-02-19 元宵</div>
+		<div class="item">New3<br/>2019-03-08 妇女</div>
+	</main>
+</body>
+</html>

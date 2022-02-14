@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript">
+        const data = [
+            {
+                name: "一级标签1",//标签名
+                key: "menu_one_1",//（唯一值）
+                value: "1",//跳转路径值
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        name: "二级标签11",//标签名
+                        key: "menu_two_11",//（唯一值）
+                        value: "11",//跳转路径值
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        name: "二级标签12",
+                        key: "menu_two_12",
+                        value: "12",
+                        hasChild: true,
+                        child: [
+                            {
+                                name: "三级标签121",
+                                key: "menu_three_121",
+                                value: "121",
+                                hasChild: false,
+                                child: []
+                            },
+                            {
+                                name: "三级标签122",
+                                key: "menu_three_122",
+                                value: "122",
+                                hasChild: false,
+                                child: []
+                            },
+                        ]
+                    }
+                ]
+            },
+            {
+                name: "一级标签2",
+                key: "menu_one_2",
+                value: "2",
+                hasChild: false,
+                child: []
+            },
+            {
+                name: "一级标签3",
+                key: "menu_one_3",
+                value: "3",
+                hasChild: true,
+                child: [
+                    {
+                        name: "二级标签31",
+                        key: "menu_two_31",
+                        value: "31",
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+        ];
+        let treedata;
+
+        function initData() {
+            treedata = document.getElementById('treedata');
+            treedata.appendChild(createTree());
+        }
+
+        function createTree() {
+            let root = document.createElement('ul');
+
+            data.forEach(function (object) {
+                root.appendChild(createChildTag(object));
+            })
+            return root;
+        }
+
+        function createChildTag(object) {
+            if(object["hasChild"]){
+                //子列表集
+                let ul = document.createElement("ul");
+
+                //自身值
+                let li_tag1 = document.createElement("li");
+                let span1 = document.createElement("span");
+                span1.innerText = 'X';
+                span1.addEventListener('click', function () {
+                    ul.classList.toggle("hide");//切换标签物件class 的hide设定；toggle->触发器。
+                    if(span1.innerText === 'X'){
+                        span1.innerText = 'O';
+                    }else{
+                        span1.innerText = 'X';
+                    }
+                })
+
+                let a1 = document.createElement("a");
+                a1.setAttribute("href", "javascript:");
+                a1.addEventListener('click', function () {
+                    alert(object["value"]);
+                });
+                a1.innerText = object["name"];
+                li_tag1.appendChild(span1)
+                li_tag1.appendChild(a1);
+
+                let subList = object["child"];
+                subList.forEach(function (object) {
+                    ul.appendChild(createChildTag(object));
+                })
+                li_tag1.appendChild(ul);
+                return li_tag1;
+            }else{
+                let li_tag = document.createElement("li");
+                let span = document.createElement("span");
+                span.innerText = 'N';
+                let a = document.createElement("a");
+                a.setAttribute("href", "javascript:");
+                a.addEventListener('click', function () {
+                    alert(object["value"]);
+                });
+                a.innerText = object["name"];
+
+                li_tag.appendChild(span)
+                li_tag.appendChild(a);
+                return li_tag;
+            }
+        }
+    </script>
+
+    <style type="text/css">
+        /*清除默认的留白*/
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .treedata {
+            background: #cdcdcd;
+        }
+
+        .treedata a, ul{
+            list-style-type: none;
+            text-decoration: none;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+<body onload="initData()">
+<div class="treedata" id="treedata"></div>
+</body>
+</html>

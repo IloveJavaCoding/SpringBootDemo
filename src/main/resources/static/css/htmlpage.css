@@ -60,6 +60,17 @@ ele[name=value]{} 某元素ele 下所有[name] 属性值为[value]的
 	3. [attribute|=value] 以 value 开头, 且必须是完整且唯一的单词，或者以 - 分隔开
 	4. [attribute^=value] 以 value 开头, 前几个字母是 value 就可以
 	5. [attribute$=value] 以 value 结尾，后几个字母是 value 就可以
+ */
+
+/**
+表格实现奇偶行不同背景效果
+对第一个tr运用虚拟选择器
+tr:nth-child(1){
+	background-color:#ffd700
+}
+tr:nth-child(even){
+	background-color:#cdcdc1
+}
 */
 
 /**

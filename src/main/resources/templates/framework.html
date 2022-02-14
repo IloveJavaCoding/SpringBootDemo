@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>首页框架</title>
@@ -44,14 +44,161 @@
                 tag: 1,//标签等级 主标签
                 name: "首页",//标签名
                 key: "menu_main",//（唯一值）
-                value: "home.html",//跳转路径值
+                value: "page/home.html",//跳转路径值
                 defTag: true,//自动添加tab,不可删除
                 hasChild: false,//是否带有子目录
                 child: []
             },
             {
                 tag: 1,//标签等级
-                name: "学习文档",//标签名
+                name: "独立页面",//标签名
+                key: "menu_page",//（唯一值）
+                value: "#",//跳转路径值
+                defTag: false,
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "表格",//标签名
+                        key: "menu_page_table",//（唯一值）
+                        value: "page/table.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "登入",//标签名
+                        key: "menu_page_login",//（唯一值）
+                        value: "page/login.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "HTML 5",
+                        key: "menu_page_html5",
+                        value: "page/html5.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "个人中心",
+                        key: "menu_page_mine",
+                        value: "page/mine.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+            {
+                tag: 1,
+                name: "学习记录",
+                key: "menu_learn",
+                value: "#",
+                defTag: false,
+                hasChild: true,
+                child: [
+                    {
+                        tag: 2,
+                        name: "js 数据类型",
+                        key: "menu_learn_js_base",
+                        value: "learn/javascript_base.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                ]
+            },
+            {
+                tag: 1,//标签等级
+                name: "小项目",//标签名
+                key: "menu_demo",//（唯一值）
+                value: "#",//跳转路径值
+                defTag: false,
+                hasChild: true,//是否带有子目录
+                child: [
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "烟花",//标签名
+                        key: "menu_demo_flower",//（唯一值）
+                        value: "demo/flower.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,//二级标签 子标签
+                        name: "dimg",//标签名
+                        key: "menu_demo_dimg",//（唯一值）
+                        value: "demo/project-dimg.html",//跳转路径值
+                        defTag: false,
+                        hasChild: false,//是否带有子目录
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "flower",
+                        key: "menu_demo_flower",
+                        value: "demo/project-flower.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "frame",
+                        key: "menu_demo_frame",
+                        value: "demo/project-frame.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "rain",
+                        key: "menu_demo_rain",
+                        value: "demo/project-rain.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "rain2",
+                        key: "menu_demo_rain2",
+                        value: "demo/project-rain2.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "taiji",
+                        key: "menu_demo_taiji",
+                        value: "demo/project-taiji.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    },
+                    {
+                        tag: 2,
+                        name: "time",
+                        key: "menu_demo_time",
+                        value: "demo/project-time.html",
+                        defTag: false,
+                        hasChild: false,
+                        child: []
+                    }
+                ]
+            },
+            {
+                tag: 1,//标签等级
+                name: "文档文件",//标签名
                 key: "menu_web",//（唯一值）
                 value: "#",//跳转路径值
                 defTag: false,
@@ -107,61 +254,6 @@
                         name: "druid配置",
                         key: "menu_web_druid",
                         value: "https://www.cnblogs.com/halberd-lee/p/11304790.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    }
-                ]
-            },
-            {
-                tag: 1,//标签等级
-                name: "自定义",//标签名
-                key: "menu_mine",//（唯一值）
-                value: "#",//跳转路径值
-                defTag: false,
-                hasChild: true,//是否带有子目录
-                child: [
-                    {
-                        tag: 2,//二级标签 子标签
-                        name: "表格",//标签名
-                        key: "menu_mine_table",//（唯一值）
-                        value: "table.html",//跳转路径值
-                        defTag: false,
-                        hasChild: false,//是否带有子目录
-                        child: []
-                    },
-                    {
-                        tag: 2,//二级标签 子标签
-                        name: "登入",//标签名
-                        key: "menu_mine_login",//（唯一值）
-                        value: "login.html",//跳转路径值
-                        defTag: false,
-                        hasChild: false,//是否带有子目录
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "数据测试",
-                        key: "menu_mine_test",
-                        value: "test.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "HTML 5",
-                        key: "menu_mine_html5",
-                        value: "html5.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "个人中心",
-                        key: "menu_mine_mine",
-                        value: "mine.html",
                         defTag: false,
                         hasChild: false,
                         child: []
@@ -420,107 +512,25 @@
                         child: []
                     }
                 ]
-            },
-            {
-                tag: 1,//标签等级
-                name: "小项目",//标签名
-                key: "menu_project",//（唯一值）
-                value: "#",//跳转路径值
-                defTag: false,
-                hasChild: true,//是否带有子目录
-                child: [
-                    {
-                        tag: 2,//二级标签 子标签
-                        name: "烟花",//标签名
-                        key: "menu_project_1",//（唯一值）
-                        value: "flower.html",//跳转路径值
-                        defTag: false,
-                        hasChild: false,//是否带有子目录
-                        child: []
-                    },
-                    {
-                        tag: 2,//二级标签 子标签
-                        name: "dimg",//标签名
-                        key: "menu_project_dimg",//（唯一值）
-                        value: "project-dimg.html",//跳转路径值
-                        defTag: false,
-                        hasChild: false,//是否带有子目录
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "flower",
-                        key: "menu_project_flower",
-                        value: "project-flower.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "frame",
-                        key: "menu_project_frame",
-                        value: "project-frame.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "rain",
-                        key: "menu_project_rain",
-                        value: "project-rain.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "rain2",
-                        key: "menu_project_rain2",
-                        value: "project-rain2.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "taiji",
-                        key: "menu_project_taiji",
-                        value: "project-taiji.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    },
-                    {
-                        tag: 2,
-                        name: "time",
-                        key: "menu_project_time",
-                        value: "project-time.html",
-                        defTag: false,
-                        hasChild: false,
-                        child: []
-                    }
-                ]
-            },
+            }
         ];//格式化菜单数据
-        const addLogo = true;//安排logo
-        const addNav = false;//是否启用动态导航栏，默认显示
+        const addLogo = true;//显示logo
+        const addNav = false;//是否启用动态导航栏
         const scroll_unit = 5;//滚动条每次变化像素点
         const scroll_tab = 100;//向左、向右按钮每次触发滚动距离
-        const footer_height = 40;//底部固定栏高度（多加几个像素），用于子页面高度补偿
 
         let tabMap;//已显示标签
         let navTabs;//动态导航栏标签
         let curTab;//当前选中的标签
+        let header;//顶部菜单栏
         let content;//iframe 容器
+        let footer;//底部信息栏
 
         //监听页面滚动控制返回顶部按钮显隐
         window.addEventListener(LISTENER_TYPE_SCROLL, function () {
             let scrollTop = document.documentElement.scrollTop;//页面上下方向滚动距离
             // console.log('滚动: ' + scrollTop);
             //当页面滚动时，将header冻结
-            let header = document.getElementById("header");
             //滚动按钮一次40px;
             if (scrollTop > 40) {//header.clientHeight
                 //固定header
@@ -541,6 +551,10 @@
 
         function initData() {
             tabMap = new Map();
+            header = document.getElementById("header");
+            content = document.getElementById("content");
+            footer = document.getElementById("footer");
+
             if (addNav) {
                 navTabs = document.getElementById("nav_tabs");
             } else {
@@ -548,10 +562,10 @@
                 nav.style.display = VIEW_NONE;
 
                 //当不要导航栏时，header添加阴影效果
-                let header = document.getElementById("header");
                 header.setAttribute(ATTR_CLASS, STYLE_HEADER_SHADOW);
             }
-            content = document.getElementById("content");
+
+            // writeObj(footer);
 
             initImage();
             initMainMenu();
@@ -780,7 +794,7 @@
 
         /**
          * 防冒泡
-         * @param e
+         * @param e 可null
          */
         function cancelBubble(e) {
             let event = e ? e : window.event || arguments.callee.caller.arguments[0];
@@ -911,10 +925,9 @@
                 }
 
                 if (child != null) {
-                    //.documentElement;
-                    obj.height = child.body.scrollHeight + footer_height;//补偿底部固定栏
-                    // obj.height = temp > document.body.scrollHeight ? temp : document.body.scrollHeight;
-                    // console.log("子页面高度：" + body.scrollHeight);
+                    let contHeight = document.body.scrollHeight - header.clientHeight - footer.clientHeight; //content 可用高度
+                    obj.height = Math.max(child.body.scrollHeight, contHeight);
+                    // console.log("子页面高度：" + obj.height);
                     return;
                 }
             } catch (e) {
@@ -922,12 +935,13 @@
             }
 
             // 获取子页面高度失败，赋予窗口高度
-            obj.height = document.body.scrollHeight;
+            obj.height = document.body.scrollHeight - header.clientHeight - footer.clientHeight;
         }
 
         /*在新页面查看图片*/
         function viewImg(src) {
             window.open(src, "_blank");
+            // location.href = src;//当前页面变化链接
         }
 
         /*跳到顶部： 原根据标签跳转因header冻结显示无效*/
@@ -1164,7 +1178,7 @@
             background-color: var(--sec-menu-bg);
             padding: 3px;
             min-width: 100%;
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2); /*让下拉菜单看起来像一个"卡片"*/
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
         }
 
         .sub_menu_cont a {
@@ -1261,14 +1275,12 @@
         /*内容变化页*/
         .content {
             width: 100%;
-            /*height: 90%;*/
         }
 
         .frame {
             border: none;
             margin: 0;
             width: 100%;
-            /*height: 100%;*/
         }
 
         /*固定漂浮内容:返回顶部*/
@@ -1348,7 +1360,7 @@
 </div>
 
 <!--页脚-->
-<div class="footer">
+<div class="footer" id="footer">
     <div class="center">
         Copyright © 2000-2222
         <span class="high_blue">Virgo</span>

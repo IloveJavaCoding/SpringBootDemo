@@ -15,6 +15,33 @@
             console.log(typeof (array));
         }
 
+        function input(){
+            //++, -- 可用
+            //---------------------
+            //输入 prompt()，输出 alert()；
+            var input1 = prompt("please input:", 1);//默认
+            var input2 = prompt("please input:", 2);
+            var op = prompt("please input the operation:(+,-,*,/)", "+");
+
+            input1 = Number(input1);//将字符类型转换为数字类型；
+            input2 = Number(input2);
+            //
+            var result;
+            if(op==="+"){
+                result = input1+input2;
+            }else if(op==="-"){
+                result = input1-input2;
+            }else if(op==="*"){
+                result = input1*input2;
+            }else if(op==="/"){
+                result = input1/input2;
+            }else{
+                alert("Wrong operation!");
+            }
+            alert(result);
+            alert(z);
+        }
+
         function str() {
             var str = "aa,bc,dc,sd";
             var strs = str.split(',');

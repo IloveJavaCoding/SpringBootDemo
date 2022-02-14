@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<!--
+声明和使用Thymeleaf的语法
+xmlns:th="http://www.thymeleaf.org"
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Title</title>
+</head>
+<body>
+Thymeleaf 测试
+<div th:text="${msg}">
+    离线数据
+</div>
+</body>
+</html>

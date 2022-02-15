@@ -2,8 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>树形数据</title>
     <script type="text/javascript">
+        const LISTENER_TYPE_CLICK = 'click';
+
+        const STYLE_TREE_DATA= 'treedata';
+        const STYLE_UL_HIDE= 'ul_hide';
+        const STYLE_SVG_HIDE = 'svg_hide';
+        const STYLE_SVG_SHOW = 'svg_show';
+
         const data = [
             {
                 name: "一级标签1",//标签名
@@ -69,6 +76,7 @@
 
         function initData() {
             treedata = document.getElementById('treedata');
+            treedata.setAttribute('class', STYLE_TREE_DATA);
             treedata.appendChild(createTree());
         }
 
@@ -88,24 +96,19 @@
 
                 //自身值
                 let li_tag1 = document.createElement("li");
-                let span1 = document.createElement("span");
-                span1.innerText = 'X';
-                span1.addEventListener('click', function () {
-                    ul.classList.toggle("hide");//切换标签物件class 的hide设定；toggle->触发器。
-                    if(span1.innerText === 'X'){
-                        span1.innerText = 'O';
-                    }else{
-                        span1.innerText = 'X';
-                    }
+
+                let svg = drawSvg(true, 10);
+                svg.addEventListener(LISTENER_TYPE_CLICK, function () {
+                    ul.classList.toggle(STYLE_UL_HIDE);//切换标签物件class 的hide设定；toggle->触发器。
                 })
 
                 let a1 = document.createElement("a");
                 a1.setAttribute("href", "javascript:");
-                a1.addEventListener('click', function () {
-                    alert(object["value"]);
+                a1.addEventListener(LISTENER_TYPE_CLICK, function () {
+                    dealData(object["value"]);
                 });
                 a1.innerText = object["name"];
-                li_tag1.appendChild(span1)
+                li_tag1.appendChild(svg);
                 li_tag1.appendChild(a1);
 
                 let subList = object["child"];
@@ -116,19 +119,82 @@
                 return li_tag1;
             }else{
                 let li_tag = document.createElement("li");
-                let span = document.createElement("span");
-                span.innerText = 'N';
                 let a = document.createElement("a");
                 a.setAttribute("href", "javascript:");
-                a.addEventListener('click', function () {
-                    alert(object["value"]);
+                a.addEventListener(LISTENER_TYPE_CLICK, function () {
+                    dealData(object["value"]);
                 });
                 a.innerText = object["name"];
 
-                li_tag.appendChild(span)
+                li_tag.appendChild(drawSvg(false), 0);
                 li_tag.appendChild(a);
                 return li_tag;
             }
+        }
+
+        /**
+         * 点击数据时触发
+         * @param value 标签所对应的数据
+         */
+        function dealData(value) {
+            alert(value);
+        }
+
+        /**
+         * 用svg绘制前端图标
+         * @param needchild 里面是否有三角标
+         * @param len 正三角形边长
+         */
+        function drawSvg(needchild, len) {
+            let svg = creatTagWithAttrs('svg',{'class':'svg_size'});
+
+            if(needchild){
+                //动态计算正三角形位置：b = 0.5*3^1/2 [0.866];
+                let b = Math.floor(0.866 * len);
+                let p1 = '0,0 ' + len + ',0 ' + len/2 + ',' + b;
+                let p2 = '0,0 ' + b + ',' + len/2 + ' 0,' + len;
+                let triangleOpen = creatTagWithAttrs("polygon",{
+                    'points': p1,
+                    "fill":"#cdcdcd",
+                    "stroke":"#cdcdcd",
+                    "stroke-width":1
+                });
+                let triangleClose = creatTagWithAttrs("polygon",{
+                    'points': p2,
+                    "fill":"#cdcdcd",
+                    "stroke":"#cdcdcd",
+                    "stroke-width":1,
+                    'visibility': 'hidden'
+                });
+
+                svg.addEventListener(LISTENER_TYPE_CLICK, function () {
+                    // if(triangleClose.getAttribute('visibility') === 'hidden'){
+                    //     triangleOpen.setAttribute('visibility', 'hidden');
+                    //     triangleClose.setAttribute('visibility', 'visible');
+                    // }else{
+                    //     triangleClose.setAttribute('visibility', 'hidden');
+                    //     triangleOpen.setAttribute('visibility', 'visible');
+                    // }
+                    triangleOpen.classList.toggle(STYLE_SVG_HIDE);
+                    triangleClose.classList.toggle(STYLE_SVG_SHOW);
+                })
+                svg.appendChild(triangleOpen);
+                svg.appendChild(triangleClose);
+            }
+
+            return svg;
+        }
+
+        /*动态添加svg子标签属性*/
+        function creatTagWithAttrs(name, attrs){
+            //在这里只是定义一个xml命名空间
+            let tag = document.createElementNS("http://www.w3.org/2000/svg",name);
+            for(let attr in attrs){
+                if(attrs.hasOwnProperty(attr)){
+                    tag.setAttribute(attr,attrs[attr]);
+                }
+            }
+            return tag;
         }
     </script>
 
@@ -140,20 +206,62 @@
         }
 
         .treedata {
-            background: #cdcdcd;
+            width: auto;
+            padding: 5px;
+            overflow: auto;
+            white-space: nowrap;
+            background: #fff;
+            border: 1px solid #66ccff;
         }
 
-        .treedata a, ul{
+        .treedata ul{
             list-style-type: none;
+            margin: 0;
+        }
+
+        /*第一级*/
+        .treedata ul:first-child{
+            /*仅保留左边缩进*/
+            padding: 0 0 5px 0;
+        }
+
+        .treedata ul:not(:first-child){
+            /*仅保留左边缩进*/
+            padding: 0 0 5px 20px;
+        }
+
+        .treedata a{
             text-decoration: none;
         }
 
-        .hide {
+        .treedata a:hover{
+            background: #66ccff;
+        }
+
+        .ul_hide {
             display: none;
+        }
+
+        .svg_hide{
+            visibility: hidden;
+        }
+
+        .svg_show{
+            visibility: visible;
+        }
+
+        .svg_size{
+            width: 10px;
+            height: 10px;
+            margin-right: 3px;
+        }
+
+        .svg_size:hover {
+            cursor: pointer;
         }
     </style>
 </head>
 <body onload="initData()">
-<div class="treedata" id="treedata"></div>
+<div id="treedata"></div>
 </body>
 </html>

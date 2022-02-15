@@ -1,36 +1,99 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>SVG(scalable vector graphics)</title>
-	<meta charset="utf-8"/>
-	<script type="text/javascript">//javascript codes;
-	
-		function init(){
-			
+    <title>SVG(scalable vector graphics)</title>
+    <meta charset="utf-8"/>
+    <script type="text/javascript">//javascript codes;
+
+    function init() {
+		let div = document.getElementById('div_blank');
+		div.appendChild(drawSvg(true));
+    }
+
+    /*
+    window.onload=function (){
+
+    };
+    */
+
+    function drawSvg(needchild) {
+        let svg = creat('svg',{'class':'svg_size'});
+
+        if(needchild){
+        	let triangleOpen = creat("polygon",{
+        		'points': '0,0 100,0 50,86',
+				"fill":"#cdcdcd",
+				"stroke":"#cdcdcd",
+				"stroke-width":1
+			});
+			let triangleClose = creat("polygon",{
+				'points': '0,0 86,50 0,100',
+				"fill":"#cdcdcd",
+				"stroke":"#cdcdcd",
+				"stroke-width":1,
+				'visibility': 'hidden'
+			});
+
+			svg.addEventListener('click', function () {
+				if(triangleClose.getAttribute('visibility') === 'hidden'){
+					console.log('close');
+					triangleOpen.setAttribute('visibility', 'hidden');
+					triangleClose.setAttribute('visibility', 'visible');
+				}else{
+					console.log('open');
+					triangleClose.setAttribute('visibility', 'hidden');
+					triangleOpen.setAttribute('visibility', 'visible');
+				}
+			})
+			svg.appendChild(triangleOpen);
+			svg.appendChild(triangleClose);
 		}
-		/*
-		window.onload=function (){
-		
-		};
-		*/
-	</script>
-	
-	<style type="text/css">
-		.size{
-			width:800px; height:400px; border:2px solid #66ccff;
+
+		return svg;
+    }
+
+	function creat(name, attrs){
+    	//在这里只是定义一个xml命名空间
+		var element=document.createElementNS("http://www.w3.org/2000/svg",name);
+		for(var attr in attrs){
+			element.setAttribute(attr,attrs[attr]);
 		}
-	</style>
+		return element;
+	}
+    </script>
+
+    <style type="text/css">
+        .size {
+            width: 800px;
+            height: 400px;
+            border: 2px solid #66ccff;
+        }
+		.svg_size{
+			width: 100px;
+			height: 100px;
+			border: 1px solid #66ccff;
+		}
+    </style>
 </head>
 <body onload="init();">
-	<svg class="size">
-	<line x1="0" y1="0" x2="400" y2="80" stroke="#228b22" stroke-width="2"></line>
-	<line x1="800" y1="0" x2="400" y2="80" stroke="#228b22" stroke-width="2"></line>
-	<rect x="370" y="70" width="60" height="60" fill="#00ffff"></rect>
-	<circle cx="400" cy="130" r="30" fill="#ff0000"></circle>
-	<polygon points="400,160,370,240,443,186,357,186,430,240" fill="#ffd700"  stroke="#ffff00" stroke-width="1"></polygon>
-	<text x="580" y="350" fill="#a020f0" font-family="华文行楷" font-size="25">口口To My Dear!</text>
-	</svg>
-	<div>Hello, World!</div>
-	
+<!--	<svg class="size">-->
+<!--	<line x1="0" y1="0" x2="400" y2="80" stroke="#228b22" stroke-width="2"></line>-->
+<!--	<line x1="800" y1="0" x2="400" y2="80" stroke="#228b22" stroke-width="2"></line>-->
+<!--	<rect x="370" y="70" width="60" height="60" fill="#00ffff"></rect>-->
+<!--	<circle cx="400" cy="130" r="30" fill="#ff0000"></circle>-->
+<!--	<polygon points="400,160,370,240,443,186,357,186,430,240" fill="#ffd700"  stroke="#ffff00" stroke-width="1"></polygon>-->
+<!--	<text x="580" y="350" fill="#a020f0" font-family="华文行楷" font-size="25">口口To My Dear!</text>-->
+<!--	</svg>-->
+<!--	<div>Hello, World!</div>-->
+
+<svg style="width: 100px; height: 100px">
+    <rect x="0" y="0" width="100" height="100" fill="#66ccff"/>
+    <polygon points="0,0 10,5 0,10" fill="#cdcdcd" stroke="#f00" stroke-width="1"></polygon>
+
+    <polygon points="0,20 10,20 5,30" fill="#cdcdcd" stroke="#f00" stroke-width="1"></polygon>
+</svg>
+<div id="div_blank">
+
+</div>
 </body>
 </html>

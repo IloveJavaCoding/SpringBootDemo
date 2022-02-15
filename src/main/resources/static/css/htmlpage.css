@@ -196,9 +196,14 @@ G: 显示：
 		
 	overflow: 内容溢出元素框时显示的方式
 		auto; 默认（溢出时==scroll)
-		scroll; 增加滚动条
+		scroll; 增加滚动条,
 		hidden; 溢出不显示
 		visible; 全部显示
+		auto与scroll在内容超出时浏览器均会显示滚动条
+		在元素没有超出时，auto会隐藏滚动条，scroll依旧显示滚动条，但是禁用该滚动条
+
+	white-space:
+		nowrap;//不换行
 		
 	float: 使元素向左或向右移动，其周围的元素也会重新排列(往往是用于图像)
 		left;

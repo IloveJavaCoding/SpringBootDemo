@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表格</title>
+    <script type="text/javascript">
+        const ATTR_ID = 'id';
+        const ATTR_CLASS = 'class';
+        const ATTR_TYPE = 'type';
+
+        const LISTENER_TYPE_CHANGE = 'change';
+        const LISTENER_TYPE_CLICK = 'click';
+        const LISTENER_TYPE_INPUT = 'input';
+
+        const titles = [
+            {
+                name: 'ID',//列名，用于显示，*
+                key: 'id',//列唯一标识，与数据对应，*
+                width: 20,//列宽px， 默认auto
+                hidden: true,//隐藏该列？ 默认不隐藏
+                sort: true,//可排序？ 默认不
+                query: false,//可筛选？ 默认不
+                formatter: 'id'//内容格式化方法 由table_id + formatter 组成，方法实现自己完成
+            },
+            {
+                name: '名称',
+                key: 'name',
+                width: 50,
+                hidden: false,
+                sort: true,
+                query: true,
+                formatter: 'name'
+            },
+            {
+                name: '年龄',
+                key: 'age',
+                width: 35,
+                query: false,
+                formatter: 'age'
+            },
+            {
+                name: '操作栏',
+                key: 'opt',
+                formatter: 'opt'
+            }
+        ];
+
+        window.onload = function () {
+            addTable();
+            setTBodyHeight()
+        }
+
+        window.onresize = function () {
+            setTBodyHeight();
+        }
+
+        function addTable() {
+            let container = document.getElementById('aTable');
+            let table = createTable(titles, 'virgo');
+            container.appendChild(table);
+        }
+
+        /**
+         * 根据给定的数据格式生成表格, 固定部分
+         * @param titles
+         */
+        function createTable(titles, tableId) {
+            const table = document.createElement("table");
+            table.setAttribute(ATTR_ID, tableId);
+            table.setAttribute(ATTR_CLASS, 'table_all');
+
+            //属性栏
+            const tHead = document.createElement("thead");
+            tHead.setAttribute(ATTR_ID, 'thead');
+            tHead.setAttribute(ATTR_CLASS, 'table_head');
+            const trH = document.createElement("tr");
+
+            //首列：选择框
+            const thA = document.createElement("th");
+            thA.setAttribute(ATTR_CLASS, 'table_thead_th_a');
+
+            const checkBoxAll = document.createElement("input");
+            checkBoxAll.setAttribute(ATTR_ID, 'checkBoxAll');
+            checkBoxAll.setAttribute(ATTR_TYPE, 'checkbox');
+            checkBoxAll.addEventListener(LISTENER_TYPE_CHANGE, function () {
+
+            });
+            thA.appendChild(checkBoxAll);
+            trH.appendChild(thA);
+
+            //动态添加其他栏
+            titles.forEach(function (object) {
+                if(object['hidden']){
+                    //隐藏栏
+                    return;
+                }
+
+                const th = document.createElement("th");
+                th.setAttribute(ATTR_ID, object['key']);
+                th.setAttribute(ATTR_CLASS, 'table_thead_th');
+                th.innerText = object['name'];
+
+                let width = object['width'];
+
+                if(object['sort']){
+                    let svg = drawSvg(true, 10);
+                    svg.addEventListener(LISTENER_TYPE_CLICK, function () {
+                        //todo 数据重排序
+                        // sortData(key);
+                    })
+                    th.appendChild(svg);
+                    if(width!=null){
+                        th.style.width = (width+10) + 'px';
+                    }
+                }else{
+                    if(width!=null){
+                        th.style.width = width + 'px';
+                    }
+                }
+
+                trH.appendChild(th);
+            });
+            tHead.appendChild(trH);
+
+            ////////////////////////内容///////////////////////////
+            const tBody = document.createElement("tbody");
+            tBody.setAttribute(ATTR_ID, 'tbody');
+            tBody.setAttribute(ATTR_CLASS, 'table_body');
+
+            ///////////////////////页脚////////////////////////////
+
+            table.appendChild(tHead);
+            table.appendChild(tBody);
+            return table;
+        }
+
+        function setTBodyHeight() {
+            let tBody = document.getElementById('tbody');
+            let tHead = document.getElementById('thead');
+
+            //设置内容高度
+            let bodyHeight = window.innerHeight - tHead.clientHeight - 100; //content 可用高度
+            console.log('window height: ' + window.innerHeight + " head height: " + tHead.clientHeight);
+            console.log('body height: ' + bodyHeight);
+            tBody.style.height = Math.min(bodyHeight, 500) + 'px';
+        }
+
+        /**
+         * 用svg绘制排序图标
+         * @param needchild 里面是否有三角标
+         * @param len 正三角形边长
+         */
+        function drawSvg(needchild, len) {
+            let svg = creatTagWithAttrs('svg',{'class':'svg_size'});
+
+            if(needchild){
+                //动态计算正三角形位置：b = 0.5*3^1/2 [0.866];
+                let b = Math.floor(0.866 * len);
+                let p1 = '0,' + b + ' ' + len + ',' + b + ' ' + len/2 + ',0';
+                let p2 = '0,' + len + ' ' + len/2 + ',' + (len+b) + ' ' + len + ',' + len;
+
+                let triangleOpen = creatTagWithAttrs("polygon",{
+                    'points': p1,
+                    "fill":"#cdcdcd",
+                    "stroke":"#cdcdcd",
+                    "stroke-width":1
+                });
+                let triangleClose = creatTagWithAttrs("polygon",{
+                    'points': p2,
+                    "fill":"#cdcdcd",
+                    "stroke":"#cdcdcd",
+                    "stroke-width":1,
+                    'visibility': 'hidden'
+                });
+
+                svg.addEventListener(LISTENER_TYPE_CLICK, function () {
+                    triangleOpen.classList.toggle('svg_hide');
+                    triangleClose.classList.toggle('svg_show');
+                })
+                svg.appendChild(triangleOpen);
+                svg.appendChild(triangleClose);
+            }
+
+            return svg;
+        }
+
+        /*动态添加svg子标签属性*/
+        function creatTagWithAttrs(name, attrs){
+            //在这里只是定义一个xml命名空间
+            let tag = document.createElementNS("http://www.w3.org/2000/svg",name);
+            for(let attr in attrs){
+                if(attrs.hasOwnProperty(attr)){
+                    tag.setAttribute(attr,attrs[attr]);
+                }
+            }
+            return tag;
+        }
+
+        /**
+         * 设置数据
+         * @param data
+         */
+        function setData(data) {
+
+        }
+    </script>
+
+    <style type="text/css">
+        /*表格*/
+        .table_all{
+            width:100%;
+            border:1px lightskyblue dashed;
+            background-color: whitesmoke;
+        }
+
+        .table_head{
+            color: white;
+            background-color: #66ccff;
+        }
+
+        .table_thead_th_a{
+            width:20px;
+            padding: 3px;
+        }
+
+        .table_thead_th{
+            padding: 3px;
+        }
+
+        .svg_hide{
+            visibility: hidden;
+        }
+
+        .svg_show{
+            visibility: visible;
+        }
+
+        .svg_size{
+            width: 10px;
+            height: 20px;
+            margin-left: 3px;
+            vertical-align: middle;
+        }
+
+        .svg_size:hover {
+            cursor: pointer;
+        }
+
+        /*表身：数据*/
+        .table_body{
+            color: #000;
+            overflow: auto;
+        }
+
+        .table_body:nth-child(odd){
+            background-color:#F6F4F0;
+        }
+
+        .table_body:nth-child(even){
+            background-color: #cdcdcd;
+        }
+    </style>
+</head>
+<body>
+<div id="aTable">
+
+</div>
+</body>
+</html>

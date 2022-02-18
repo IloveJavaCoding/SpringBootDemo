@@ -1,0 +1,133 @@
+@charset "utf-8";
+/**
+表格数据特有
+ */
+/*根布局*/
+.layout_root{
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 40px;
+    position: relative;
+}
+
+/*控制栏*/
+.layout_controller{
+    margin-bottom: 10px;
+}
+
+.layout_controller select{
+    width: 50px;
+}
+
+.layout_controller .layout_search{
+    display: inline;
+    float: right;
+}
+
+/*表格*/
+.layout_table{
+    width:100%;
+    border:0;
+    text-align:center;
+    background-color: snow;
+}
+
+/*表头：属性*/
+.table_head{
+    height: 30px;
+    background-color:#66ccff;
+    color: #fff;
+}
+
+.table_head th{
+    max-width: 20%;
+}
+
+.table_head .table_th_a{
+    width: 30px;
+}
+
+.table_head .table_th_z{
+    min-width: 80px;
+}
+
+
+/*表身：数据*/
+.table_body{
+    color: #000;
+}
+
+.table_body .table_tr_single{
+    background-color:#F6F4F0;
+}
+
+.table_body .table_tr_double{
+    background-color: #cdcdcd;
+}
+
+/*表尾：页面信息*/
+.table_foot{
+    height: 30px;
+    align-items: center;
+    color: grey;
+}
+
+.table_foot .span_highlight{
+    color: #66ccff;
+}
+
+.table_foot p{
+    display: inline;
+    margin-right:5px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/*表尾按钮*/
+.p_button{
+    border-radius: 3px;
+    background-color: #F6F4F0;
+}
+
+.p_button:hover{
+    cursor: pointer;
+    background-color: #666666;
+    color: white;
+}
+
+.p_button:active{
+    background-color: #F6F4F0;
+    color: red;
+}
+
+/*底部悬浮按钮*/
+.layout_div_button{
+    height: 50px;
+}
+
+.layout_confirm_button{
+    display: block;
+    width: 50px;
+    height: 50px;
+    line-height:50px;
+    background-color: #66ccff;
+    color: white;
+    border-radius: 50px;
+    border: 1px solid #cdcdcd;
+    text-align: center;
+    /*float: right;*/
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    transition:background-color 0.3s;
+}
+
+.layout_confirm_button:hover{
+    background-color: #00a5ff;
+    cursor: pointer;
+}
+
+.layout_confirm_button:active{
+    color: red;
+}

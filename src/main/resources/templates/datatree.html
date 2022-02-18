@@ -77,10 +77,13 @@
         function initData() {
             treedata = document.getElementById('treedata');
             treedata.setAttribute('class', STYLE_TREE_DATA);
-            treedata.appendChild(createTree());
+            treedata.appendChild(createTree(data));
         }
 
-        function createTree() {
+        /**
+         * 传入标准格式数据，生成数据树
+         */
+        function createTree(data) {
             let root = document.createElement('ul');
 
             data.forEach(function (object) {

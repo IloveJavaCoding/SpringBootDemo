@@ -6,12 +6,105 @@ xmlns:th="http://www.thymeleaf.org"
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${title}">Title</title>
+    <title>Title</title>
+    <style type="text/css">
+        .table{
+            width: 500px;
+            /*border-collapse:collapse;*/
+            background-color: #cdcdcd;
+        }
+
+        .table tr{
+            background-color: #66ccff;
+        }
+
+        .table tr td{
+            color: #fff;
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .table>tbody>tr,.table>thead{
+            display: table;
+            width: 100%;
+            table-layout: fixed; /* 重要  表格固定算法 */
+        }
+
+        .table>tbody{
+            height: 200px;
+            overflow: hidden;
+            display: block;
+            overflow-y: auto;
+        }
+    </style>
 </head>
 <body>
 Thymeleaf 测试
 <div th:text="${msg}">
     离线数据
+</div>
+
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <td>我是表头1</td>
+            <td>我是表头2</td>
+            <td>我是表头3</td>
+            <td>我是表头4</td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr> <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+            <td>内容4</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

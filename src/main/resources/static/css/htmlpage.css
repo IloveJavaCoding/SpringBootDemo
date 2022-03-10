@@ -180,7 +180,8 @@ G: 显示：
 			
 			//设置弹性容器内弹性子元素的属性
 			order: 数值小的排在前面,可以为负值
-			
+
+		设为Flex布局以后，子元素的float、clear和vertical-align属性将失效。
 			
 	visibility: 可见还是隐藏
 		visible; 默认显示；
@@ -373,6 +374,14 @@ ps：
 8. 用户界面
 	resize: [none|both|horizontal|vertical];	//指定一个元素是否是由用户调整大小(配用 overflow:auto;)
 	outline-offset: 10px; //规定边框边缘之外 n 像素处的轮廓 (配用 outline:2px solid red;)
+
+9. img
+	  object-fit:
+	  	fill: 填充,默认值,替换内容拉伸填满整个content box, 不保证保持原有的比例。
+		contain: 包含,保持原有尺寸比例。保证替换内容尺寸一定可以在容器里面放得下。因此，此参数可能会在容器内留下空白。
+		cover:  覆盖, 保持原有尺寸比例。保证替换内容尺寸一定大于容器尺寸，宽度和高度至少有一个和容器一致。因此，此参数可能会让替换内容（如图片）部分区域不可见。
+		none: 无, 保持原有尺寸比例。同时保持替换内容原始尺寸大小。
+		scale-down: 降低, 就好像依次设置了none或contain, 最终呈现的是尺寸比较小的那个。
 */
 
 /*动画*/

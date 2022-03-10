@@ -10,8 +10,8 @@
 
         const LISTENER_TYPE_CHANGE = 'change';
         const LISTENER_TYPE_CLICK = 'click';
-        const LISTENER_TYPE_INPUT = 'input';
 
+        ////内容格式化方法 由table_id + key + Formatter 组成，方法实现自己完成
         const titles = [
             {
                 name: 'ID',//列名，用于显示，*
@@ -19,8 +19,7 @@
                 width: 20,//列宽px， 默认auto
                 hidden: true,//隐藏该列？ 默认不隐藏
                 sort: true,//可排序？ 默认不
-                query: false,//可筛选？ 默认不
-                formatter: 'id'//内容格式化方法 由table_id + formatter 组成，方法实现自己完成
+                query: false//可筛选？ 默认不
             },
             {
                 name: '名称',
@@ -28,41 +27,187 @@
                 width: 50,
                 hidden: false,
                 sort: true,
-                query: true,
-                formatter: 'name'
+                query: true
             },
             {
                 name: '年龄',
                 key: 'age',
                 width: 35,
-                query: false,
-                formatter: 'age'
+                query: false
+            },
+            {
+                name: '头像',
+                key: 'portrait',
+                width: 50
             },
             {
                 name: '操作栏',
-                key: 'opt',
-                formatter: 'opt'
+                key: 'opt'
             }
         ];
+        //如果页面在服务器上，浏览器出于安全考虑是不允许html访问本地文件的
+        const json = [
+            {
+                id: 1,
+                name: 'ttys3',
+                age: '12',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/bee0299acc339edf.jpg'
+            },
+            {
+                id: 2,
+                name: 'ttys2',
+                age: '11',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/b76b1f5ffebfb8ba.jpg'
+            },
+            {
+                id: 3,
+                name: 'ttys1',
+                age: '12',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/cfc63afd1af3958c.jpg'
+            },
+            {
+                id: 4,
+                name: 'ttys0',
+                age: '15',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/f0e30c283a43f101.jpg'
+            },
+            {
+                id: 5,
+                name: 'ttys3',
+                age: '12',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/bee0299acc339edf.jpg'
+            },
+            {
+                id: 6,
+                name: 'ttys2',
+                age: '11',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/b76b1f5ffebfb8ba.jpg'
+            },
+            {
+                id: 7,
+                name: 'ttys1',
+                age: '12',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/cfc63afd1af3958c.jpg'
+            },
+            {
+                id: 8,
+                name: 'ttys0',
+                age: '15',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/f0e30c283a43f101.jpg'
+            },
+            {
+                id: 9,
+                name: 'ttys1',
+                age: '12',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/cfc63afd1af3958c.jpg'
+            },
+            {
+                id: 10,
+                name: 'ttys0',
+                age: '15',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/f0e30c283a43f101.jpg'
+            },
+            {
+                id: 11,
+                name: 'ttys0',
+                age: '15',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/f0e30c283a43f101.jpg'
+            },
+            {
+                id: 12,
+                name: 'ttys1',
+                age: '12',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/cfc63afd1af3958c.jpg'
+            },
+            {
+                id: 13,
+                name: 'ttys0',
+                age: '15',
+                portrait: 'http://192.168.2.19:9991/cdmsa/2021/11/18/f0e30c283a43f101.jpg'
+            }
+        ]
+        const rowList = [10,15,20];//下拉选择框默认列表值
+        const BODY_MAX_HEIGHT = 600;
+
+        const TABLE_ID = 'virgo';
+        const KEY_CHECKBOXALL = 'th_checkBoxAll';
+        const KEY_OPT = 'opt';//操作栏 key
+
+        let columes = [];//需显示的属性栏
+        let cacheData = [];//总数据
+        let pageData = [];//当前页数据
+        let checkList = [];//选中项列表: id
+        let lastHeight = 0;//窗口高度
+        let sortKey;//当前排序列
+        let isIncrease = true;//默认小->大
+
+        let rowNum;//每页显示行数
+        let curPage;//当前页数
+        let allPage;//总页数
+        let allNum;//总项数
 
         window.onload = function () {
-            addTable();
-            setTBodyHeight()
-        }
-
-        window.onresize = function () {
+            addTable(titles, TABLE_ID);
+            setData(json);
             setTBodyHeight();
         }
 
-        function addTable() {
+        window.onresize = function () {
+            //仅处理高度变化
+            if (lastHeight === window.innerHeight) {
+                return;
+            }
+            lastHeight = window.innerHeight;
+            setTBodyHeight();
+        }
+
+        function addTable(titles, tableId) {
+            initData();
+
             let container = document.getElementById('aTable');
-            let table = createTable(titles, 'virgo');
+            let table = createITable(titles, tableId);
             container.appendChild(table);
         }
 
         /**
-         * 根据给定的数据格式生成表格, 固定部分
+         * 初始化数据
+         */
+        function initData() {
+            rowNum = rowList[0];//设置默认行数
+            curPage = 0;
+            allPage = 0;
+            allNum = 0;
+        }
+
+        /**
+         * itable 生成框架
          * @param titles
+         */
+        function createITable(titles, tableId) {
+            let root = document.createElement('div');//整体容器
+            root.setAttribute(ATTR_CLASS, 'itable_root');
+
+            //顶部控制栏
+            let header = document.createElement('div');
+            header.setAttribute(ATTR_ID, 'itable_header');
+            header.setAttribute(ATTR_CLASS, 'itable_header');
+
+            //中间表格
+            let body = document.createElement('div');
+            body.setAttribute(ATTR_ID, 'itable_body');
+            body.setAttribute(ATTR_CLASS, 'itable_body');
+            body.appendChild(createTable(titles, tableId));
+
+            //底部页面控制栏
+            root.appendChild(header);
+            root.appendChild(body);
+            root.appendChild(createFootController());
+            return root;
+        }
+
+        /**
+         * 根据给定的数据格式生成表格, 固定部分
+         * 仅创建表格
          */
         function createTable(titles, tableId) {
             const table = document.createElement("table");
@@ -77,43 +222,44 @@
 
             //首列：选择框
             const thA = document.createElement("th");
-            thA.setAttribute(ATTR_CLASS, 'table_thead_th_a');
+            thA.setAttribute(ATTR_ID, KEY_CHECKBOXALL);
+            thA.style.width = '20px';
 
             const checkBoxAll = document.createElement("input");
-            checkBoxAll.setAttribute(ATTR_ID, 'checkBoxAll');
             checkBoxAll.setAttribute(ATTR_TYPE, 'checkbox');
             checkBoxAll.addEventListener(LISTENER_TYPE_CHANGE, function () {
-
+                checkDataAllOrNot(checkBoxAll.checked);
             });
             thA.appendChild(checkBoxAll);
             trH.appendChild(thA);
+            columes.push(KEY_CHECKBOXALL);
 
             //动态添加其他栏
             titles.forEach(function (object) {
-                if(object['hidden']){
+                if (object['hidden']) {
                     //隐藏栏
                     return;
                 }
 
+                let key = object['key'];
+                columes.push(key);
                 const th = document.createElement("th");
-                th.setAttribute(ATTR_ID, object['key']);
-                th.setAttribute(ATTR_CLASS, 'table_thead_th');
+                th.setAttribute(ATTR_ID, key);
                 th.innerText = object['name'];
 
                 let width = object['width'];
 
-                if(object['sort']){
+                if (object['sort']) {
                     let svg = drawSvg(true, 10);
                     svg.addEventListener(LISTENER_TYPE_CLICK, function () {
-                        //todo 数据重排序
-                        // sortData(key);
+                        sortDataByKey(key);
                     })
                     th.appendChild(svg);
-                    if(width!=null){
-                        th.style.width = (width+10) + 'px';
+                    if (width != null) {
+                        th.style.width = (width + 10) + 'px';
                     }
-                }else{
-                    if(width!=null){
+                } else {
+                    if (width != null) {
                         th.style.width = width + 'px';
                     }
                 }
@@ -123,26 +269,158 @@
             tHead.appendChild(trH);
 
             ////////////////////////内容///////////////////////////
-            const tBody = document.createElement("tbody");
+            let tBody = document.createElement("tbody");
             tBody.setAttribute(ATTR_ID, 'tbody');
             tBody.setAttribute(ATTR_CLASS, 'table_body');
 
-            ///////////////////////页脚////////////////////////////
-
             table.appendChild(tHead);
             table.appendChild(tBody);
+
             return table;
         }
 
+        /**
+         * 底部页面控制器，另一个table
+         * 上一页，当前页，总页, 下一页，下拉框，数据条数
+         */
+        function createFootController() {
+            let footer = document.createElement('div');
+            footer.setAttribute(ATTR_ID, 'itable_footer');
+            footer.setAttribute(ATTR_CLASS, 'itable_footer');
+
+            let layoutLeft = document.createElement('div');
+            layoutLeft.setAttribute(ATTR_CLASS, 'footer_layout_left');
+            let layoutCenter = document.createElement('div');
+            layoutCenter.setAttribute(ATTR_CLASS, 'footer_layout_center');
+            let layoutRight = document.createElement('div');
+            layoutRight.setAttribute(ATTR_CLASS, 'footer_layout_right');
+
+            let center = document.createElement('p');
+            let pHead = document.createElement('p');//第一页
+            pHead.setAttribute(ATTR_CLASS, 'footer_button');
+            pHead.innerText = '首页';
+            pHead.addEventListener(LISTENER_TYPE_CLICK, function () {
+                 toHeadPage();
+            });
+
+            let pLast = document.createElement('p');
+            pLast.setAttribute(ATTR_CLASS, 'footer_button');
+            pLast.innerText = '上一页';
+            pLast.addEventListener(LISTENER_TYPE_CLICK, function () {
+                toLastPage()
+            });
+
+            let pageInfo = document.createElement('p');
+            pageInfo.setAttribute(ATTR_CLASS, 'footer_page_info');
+            let pageCur = document.createElement('span');
+            pageCur.setAttribute(ATTR_ID, 'page_cur');
+            pageCur.setAttribute(ATTR_CLASS, 'footer_page_cur');
+            pageCur.innerText = 1;
+
+            let pageSlash = document.createElement('span');
+            pageSlash.setAttribute(ATTR_CLASS, 'footer_page_slash');
+            pageSlash.innerText= '/';
+
+            let pageAll = document.createElement('span');
+            pageAll.setAttribute(ATTR_ID, 'page_all');
+            pageAll.setAttribute(ATTR_CLASS, 'footer_page_all');
+            pageAll.innerText = 1;
+
+            pageInfo.appendChild(pageCur);
+            pageInfo.appendChild(pageSlash);
+            pageInfo.appendChild(pageAll);
+
+            let pNext = document.createElement('p');
+            pNext.setAttribute(ATTR_CLASS, 'footer_button');
+            pNext.innerText = '下一页';
+            pNext.addEventListener(LISTENER_TYPE_CLICK, function () {
+                toNextPage();
+            });
+
+            let pTail = document.createElement('p');
+            pTail.setAttribute(ATTR_CLASS, 'footer_button');
+            pTail.innerText = '尾页';
+            pTail.addEventListener(LISTENER_TYPE_CLICK, function () {
+                toTailPage();
+            });
+
+            let select = document.createElement("select");
+            rowList.forEach(function (value, index) {
+                let option = document.createElement("option");
+                option.value = value;
+                option.innerText = value;
+                //默认选中第一个
+                if(index===0){
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            })
+
+            //监听 select 选项变化
+            select.addEventListener(LISTENER_TYPE_CHANGE, function () {
+                let selectValue = select.options[select.selectedIndex].value;//String;
+                console.log("选择： " + selectValue);
+                rowNum = parseInt(selectValue);
+                onDataNumChange();
+            });
+
+            center.appendChild(pHead);
+            center.appendChild(pLast);
+            center.appendChild(pageInfo);
+            center.appendChild(pNext);
+            center.appendChild(pTail);
+            center.appendChild(select);
+
+            let right = document.createElement('p');
+            right.setAttribute(ATTR_CLASS, 'footer_item_info');
+            let info = document.createElement('span');
+            info.setAttribute(ATTR_ID, 'item_infos');
+            info.innerText = 'Showing 1 to 10 of 12 entries';
+            right.appendChild(info);
+
+            layoutCenter.appendChild(center);
+            layoutRight.appendChild(right);
+
+            footer.appendChild(layoutLeft);
+            footer.appendChild(layoutCenter);
+            footer.appendChild(layoutRight);
+            return footer;
+        }
+
         function setTBodyHeight() {
+            // let tBody = document.getElementById('tbody');
+            // let tHead = document.getElementById('thead');
+            //
+            // //设置内容高度
+            // let bodyHeight = window.innerHeight - tHead.clientHeight; //content 可用高度
+            // console.log('window height: ' + window.innerHeight + " head height: " + tHead.clientHeight);
+            // console.log('body height: ' + bodyHeight);
+            // tBody.style.height = Math.min(bodyHeight, 500) + 'px';
+
+            // let header = document.getElementById('itable_header');
+            // let body = document.getElementById('itable_body');
+            // let footer = document.getElementById('itable_footer');
+            //
+            // //设置内容高度
+            // let bodyHeight = window.innerHeight - header.clientHeight - footer.clientHeight - 100; //content 可用高度
+            // console.log('window height: ' + window.innerHeight + 'body height: ' + bodyHeight);
+            // body.style.height = Math.min(bodyHeight, 500) + 'px';
+
+
+            let header = document.getElementById('itable_header');
+            let body = document.getElementById('itable_body');
+            let footer = document.getElementById('itable_footer');
             let tBody = document.getElementById('tbody');
             let tHead = document.getElementById('thead');
 
             //设置内容高度
-            let bodyHeight = window.innerHeight - tHead.clientHeight - 100; //content 可用高度
-            console.log('window height: ' + window.innerHeight + " head height: " + tHead.clientHeight);
-            console.log('body height: ' + bodyHeight);
-            tBody.style.height = Math.min(bodyHeight, 500) + 'px';
+            let bodyHeight = window.innerHeight - header.clientHeight - footer.clientHeight; //content 可用高度
+            bodyHeight = Math.min(bodyHeight, BODY_MAX_HEIGHT);
+
+            body.style.height = bodyHeight + 'px';
+            tBody.style.height = (bodyHeight - tHead.clientHeight) + 'px';
+
+            console.log('window height: ' + window.innerHeight + 'body height: ' + bodyHeight);
         }
 
         /**
@@ -151,31 +429,35 @@
          * @param len 正三角形边长
          */
         function drawSvg(needchild, len) {
-            let svg = creatTagWithAttrs('svg',{'class':'svg_size'});
+            let svg = creatTagWithAttrs('svg', {'class': 'svg_size'});
 
-            if(needchild){
+            if (needchild) {
                 //动态计算正三角形位置：b = 0.5*3^1/2 [0.866];
                 let b = Math.floor(0.866 * len);
-                let p1 = '0,' + b + ' ' + len + ',' + b + ' ' + len/2 + ',0';
-                let p2 = '0,' + len + ' ' + len/2 + ',' + (len+b) + ' ' + len + ',' + len;
+                let p1 = '0,' + b + ' ' + len + ',' + b + ' ' + len / 2 + ',0';
+                let p2 = '0,' + (2*len-b) + ' ' + len / 2 + ',' + (2*len) + ' ' + len + ',' + (2*len-b);
 
-                let triangleOpen = creatTagWithAttrs("polygon",{
+                let triangleOpen = creatTagWithAttrs("polygon", {
                     'points': p1,
-                    "fill":"#cdcdcd",
-                    "stroke":"#cdcdcd",
-                    "stroke-width":1
+                    "fill": "#cdcdcd",
+                    "stroke": "#cdcdcd",
+                    "stroke-width": 1
                 });
-                let triangleClose = creatTagWithAttrs("polygon",{
+                let triangleClose = creatTagWithAttrs("polygon", {
                     'points': p2,
-                    "fill":"#cdcdcd",
-                    "stroke":"#cdcdcd",
-                    "stroke-width":1,
-                    'visibility': 'hidden'
+                    "fill": "#cdcdcd",
+                    "stroke": "#cdcdcd",
+                    "stroke-width": 1,
                 });
 
                 svg.addEventListener(LISTENER_TYPE_CLICK, function () {
-                    triangleOpen.classList.toggle('svg_hide');
-                    triangleClose.classList.toggle('svg_show');
+                    if (triangleClose.getAttribute('visibility') === 'hidden') {
+                        triangleOpen.setAttribute('visibility', 'hidden');
+                        triangleClose.setAttribute('visibility', 'visible');
+                    } else {
+                        triangleOpen.setAttribute('visibility', 'visible');
+                        triangleClose.setAttribute('visibility', 'hidden');
+                    }
                 })
                 svg.appendChild(triangleOpen);
                 svg.appendChild(triangleClose);
@@ -185,12 +467,12 @@
         }
 
         /*动态添加svg子标签属性*/
-        function creatTagWithAttrs(name, attrs){
+        function creatTagWithAttrs(name, attrs) {
             //在这里只是定义一个xml命名空间
-            let tag = document.createElementNS("http://www.w3.org/2000/svg",name);
-            for(let attr in attrs){
-                if(attrs.hasOwnProperty(attr)){
-                    tag.setAttribute(attr,attrs[attr]);
+            let tag = document.createElementNS("http://www.w3.org/2000/svg", name);
+            for (let attr in attrs) {
+                if (attrs.hasOwnProperty(attr)) {
+                    tag.setAttribute(attr, attrs[attr]);
                 }
             }
             return tag;
@@ -201,44 +483,366 @@
          * @param data
          */
         function setData(data) {
+            if (data !== null && data.length > 0) {
+                cacheData = data;
+                allNum = cacheData.length;
+                onDataNumChange();
+            }
+        }
 
+        /**
+         * 当数据行数、显示行数变化
+         */
+        function onDataNumChange() {
+            curPage = 1;
+            allPage = Math.ceil(allNum/rowNum);
+            updateCurPage(curPage);
+            updateAllPage(allPage);
+            loadPageData(curPage);
+        }
+
+        function loadPageData(page) {
+            let start = rowNum*(page-1);
+            let end = Math.min(rowNum*page, allNum);
+
+            console.log("start: " + start + ", end: " + end);
+            pageData = cacheData.slice(start, end);//左闭右开
+            loadData(pageData);
+            showItemsNote(start+1, end);
+        }
+
+        /**
+         * 第一页
+         */
+        function toHeadPage() {
+            if(curPage>1){
+                curPage = 1;
+                onChangePage(curPage);
+            }
+        }
+
+        /**
+         * 上一页
+         */
+        function toLastPage() {
+            if(curPage>1){
+                curPage--;
+                onChangePage(curPage);
+            }
+        }
+
+        /**
+         * 下一页
+         */
+        function toNextPage() {
+            if(allPage>curPage){
+                curPage++;
+                onChangePage(curPage);
+            }
+        }
+
+        /**
+         * 最后一页
+         */
+        function toTailPage() {
+            if(allPage>curPage){
+                curPage=allPage;
+                onChangePage(curPage);
+            }
+        }
+
+        function onChangePage(page) {
+            updateCurPage(page);
+            loadPageData(page);
+        }
+
+        /**
+         * 更新页数信息1
+         */
+        function updateCurPage(page) {
+            document.getElementById('page_cur').innerText = page;
+        }
+
+        /**
+         * 更新页数信息2
+         */
+        function updateAllPage(page) {
+            document.getElementById('page_all').innerText = page;
+        }
+
+        /**
+         * 更新显示当前条数提示
+         */
+        function showItemsNote(start, end) {
+            let info =  document.getElementById('item_infos');
+            info.innerText = '第 ' + start + ' 至 ' + end + ' 条，共 ' + allNum + ' 条';
+        }
+
+        /**
+         * 加载、显示数据
+         */
+        function loadData(data) {
+            let tBody = document.getElementById('tbody');
+            removeAllChildNode(tBody);
+
+            data.forEach(function (object) {
+                let tr = document.createElement('tr');
+                const id = object['id'];
+                columes.forEach(function (key) {
+                    // console.log('key: ' + key);
+                    let td = document.createElement('td');
+
+                    //手动设置每格宽度，与head等宽
+                    let th = document.getElementById(key);
+                    // console.log(key + ': ' + width);
+                    td.style.width = th.style.getPropertyValue('width');//有单位的值;
+
+                    if (key === KEY_CHECKBOXALL) {
+                        let checkbox = document.createElement("input");
+                        checkbox.setAttribute(ATTR_TYPE, 'checkbox');
+                        checkbox.setAttribute('value', id);
+                        checkbox.addEventListener(LISTENER_TYPE_CHANGE, function () {
+                            checkDataOneOrNot(checkbox);
+                        });
+
+                        td.appendChild(checkbox);
+                    } else if (key === KEY_OPT) {
+                        // 操作栏
+
+                    } else {
+                        // 其他栏
+                        let html;
+                        let fuc = getFormatter(key);
+                        if (isAFunction(fuc)) {
+                            // 在字符串内给函数传参：加上转义字符\'\' --> 字符串，不加的话只能传数字
+                            html = eval(fuc + "(\'" + JSON.stringify(object) + "\', \'" + object[key] + "\');");
+                        } else {
+                            html = object[key];
+                        }
+                        //"<span title=" + object[key] + ">"+object[key]+"</span>";
+                        //title ：  当鼠标悬停时，所显示的文字  （通用属性，所有标签都可以使用）
+                        td.innerHTML = html;
+                    }
+                    tr.appendChild(td);
+                })
+
+                tBody.appendChild(tr);
+            })
+        }
+
+        /**
+         * 根据key栏排序数据，每次仅支持一种
+         */
+        function sortDataByKey(key) {
+            if (cacheData == null || cacheData.length < 1) {
+                return;
+            }
+
+            if (key === sortKey) {
+                //更换顺序
+                isIncrease = !isIncrease;
+            } else {
+                //新排序规则
+                sortKey = key;
+                isIncrease = true;
+            }
+
+            cacheData.sort(function (a, b) {
+                if (isIncrease) {
+                    return sortVar(a[key], b[key]);
+                } else {
+                    return sortVar(b[key], a[key]);
+                }
+            });
+
+            loadData();
+        }
+
+        //拼接动态函数
+        function getFormatter(key) {
+            return TABLE_ID + upcaseString(key) + 'Formatter';
+        }
+
+        /**
+         * 设置全选复选框为未选择状态
+         */
+        function setCheckBoxAllFalse() {
+            document.getElementById(KEY_CHECKBOXALL).firstChild.checked = false;
+        }
+
+        /**
+         * 获取全选复选框当前状态
+         * @returns 全选复选框当前状态
+         */
+        function getCheckBoxAllState() {
+            return document.getElementById(KEY_CHECKBOXALL).firstChild.checked
+        }
+
+        /**
+         * 全选复选框状态变化时，变更相应选中数据
+         * @param checked 选中状态
+         */
+        function checkDataAllOrNot(checked) {
+            checkList = [];
+            changeAllCheckBoxState(checked);
+
+            if (checked) {
+                cacheData.forEach(function (object) {
+                    checkList.push(object['id']);
+                });
+            }
+        }
+
+        /**
+         * 列表单个复选框状态变化时
+         * @param checkbox 复选框
+         */
+        function checkDataOneOrNot(checkbox) {
+            let id = checkbox.value;//string
+            id = parseInt(id);
+            // let index = checkList.existInArray(id);
+            let index = checkList.indexOf(id);
+            if (checkbox.checked) {
+                //选中
+                if (index === -1) {
+                    //不存在则添加
+                    checkList.push(id);
+                }
+            } else {
+                setCheckBoxAllFalse();
+                if (index !== -1) {
+                    //存在则删除
+                    checkList.splice(index, 1);
+                }
+            }
+        }
+
+        ////////////////////////////////////通用////////////////////////////////////////
+        /**
+         * 设置所有复选框状态
+         * @param checked 选中状态
+         */
+        function changeAllCheckBoxState(checked) {
+            let arrs = document.getElementsByTagName('input');
+
+            for (var i = 0; i < arrs.length; i++) {
+                if (arrs[i].getAttribute('type') === 'checkbox') {
+                    arrs[i].checked = checked;
+                }
+            }
+        }
+
+        /**
+         * 删除某节点下所有子节点
+         * @param pNode 目标标签
+         */
+        function removeAllChildNode(pNode) {
+            //1.
+            // pNode.innerHTML = '';
+
+            //2.
+            while (pNode.hasChildNodes()) {
+                pNode.removeChild(pNode.firstChild);
+            }
+        }
+
+        function sortVar(a, b) {
+            //a>b 1
+            //a<b -1
+            //a==b 0
+            let isnumber = (typeof (a) === "number");
+            if (isnumber) {
+                return a - b;
+            } else {
+                if (a === b) {
+                    return 0;
+                } else if (a > b) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        }
+
+        /**
+         * 首字母大写
+         */
+        function upcaseString(str) {
+            return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+        }
+
+        /**
+         * 判断是否存在该函数
+         * eval: 把字符串解析成一个方法并且调用
+         * @param fName
+         */
+        function isAFunction(fName) {
+            try {
+                return typeof (eval(fName)) == "function";
+            } catch (e) {
+                //不存在
+            }
+
+            return false;
         }
     </script>
 
     <style type="text/css">
-        /*表格*/
-        .table_all{
-            width:100%;
-            border:1px lightskyblue dashed;
+        /*框架*/
+        .itable_root {
+            width: 100%;
+            background-color: black;
+        }
+
+        .itable_header {
+            background-color: red;
+        }
+
+        .itable_body {
+            width: 100%;
             background-color: whitesmoke;
         }
 
-        .table_head{
+        /*表格*/
+        .table_all {
+            width: 100%;
+        }
+
+        .table_head th {
+            height: 40px;
             color: white;
             background-color: #66ccff;
-        }
-
-        .table_thead_th_a{
-            width:20px;
             padding: 3px;
         }
 
-        .table_thead_th{
+        /*表身：数据*/
+        .table_body {
+            width: 100%;
+            display: block;
+            overflow: auto;
+        }
+
+        .table_body tr, .table_head {
+            width: 100%;
+            display: table;
+        }
+
+        .table_body td {
             padding: 3px;
         }
 
-        .svg_hide{
-            visibility: hidden;
+        .table_body tr:nth-child(odd) td {
+            background-color: #F9F9F9;
         }
 
-        .svg_show{
-            visibility: visible;
+        .table_body tr:nth-child(even) td {
+            background-color: #ffffff;
         }
 
-        .svg_size{
+        .svg_size {
             width: 10px;
             height: 20px;
-            margin-left: 3px;
+            margin-left: 5px;
             vertical-align: middle;
         }
 
@@ -246,18 +850,69 @@
             cursor: pointer;
         }
 
-        /*表身：数据*/
-        .table_body{
-            color: #000;
-            overflow: auto;
+        /*=====================底部控制栏====================*/
+        .itable_footer {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: whitesmoke;
         }
 
-        .table_body:nth-child(odd){
-            background-color:#F6F4F0;
+        .itable_footer p, select{
+            display: inline-block;
+            margin: 5px 10px;
         }
 
-        .table_body:nth-child(even){
-            background-color: #cdcdcd;
+        .footer_layout_left{
+            width: 25%;
+            flex-grow: 1;
+        }
+
+        .footer_layout_center{
+            flex-grow:1;
+            flex-shrink:0;
+            align-self: center;
+        }
+
+        .footer_layout_right{
+            flex-grow:1;
+            text-align: right;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .footer_button{
+            border-radius: 3px;
+            padding: 3px 5px;
+            margin: 0 5px;
+            background-color: whitesmoke;
+        }
+
+        .footer_button:hover{
+            cursor: pointer;
+            background-color: #666666;
+            color: white;
+        }
+
+        .footer_page_info{
+
+        }
+
+        .footer_page_cur{
+
+        }
+
+        .footer_page_slash{
+
+        }
+
+        .footer_page_all{
+
+        }
+
+        .footer_item_info{
+
         }
     </style>
 </head>
@@ -265,5 +920,23 @@
 <div id="aTable">
 
 </div>
+
+<script type="text/javascript">
+    /**
+     * 表格数据格式重构方法
+     * @param object 某行数据(json， 需转义) JSON.parse(object)
+     * @param value 该格内数据
+     * @returns string 或 html
+     */
+    function virgoAgeFormatter(object, value) {
+        let obj = JSON.parse(object);
+        // console.log(typeof (obj) + ", value: " + value);
+        return obj['age'] + '岁';
+    }
+
+    function virgoPortraitFormatter(object, value) {
+        return "<img width='50' height='50' src='" + value + "' alt='miss'/>";
+    }
+</script>
 </body>
 </html>

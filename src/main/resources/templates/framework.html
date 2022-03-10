@@ -32,6 +32,11 @@
         const VIEW_NONE = 'none';
         const FRAME_KEY_HEAD = 'iframe_';//ifrmae id 统一前缀
 
+        /**
+         * ../ -> 表示返回上一级；
+         * ./  -> 表示在当前目录下，可以不写；
+         * /   -> 表示在当前文件所在的根目录开始查找；
+         */
         const SRC_LOGO = '../static/res/logo2.png';//logo 资源
         const SRC_DEL = '../static/res/icon_del.png';//删除图标 资源
         const SRC_BACKTOP = '../static/res/icon_backtop.png';//返回顶部
@@ -925,7 +930,7 @@
                 }
 
                 if (child != null) {
-                    let contHeight = document.body.scrollHeight - header.clientHeight - footer.clientHeight; //content 可用高度
+                    let contHeight = document.body.clientHeight - header.clientHeight - footer.clientHeight; //content 可用高度
                     obj.height = Math.max(child.body.scrollHeight, contHeight);
                     // console.log("子页面高度：" + obj.height);
                     return;
@@ -935,7 +940,7 @@
             }
 
             // 获取子页面高度失败，赋予窗口高度
-            obj.height = document.body.scrollHeight - header.clientHeight - footer.clientHeight;
+            obj.height = document.body.clientHeight - header.clientHeight - footer.clientHeight;
         }
 
         /*在新页面查看图片*/

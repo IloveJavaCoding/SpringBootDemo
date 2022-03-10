@@ -15,7 +15,7 @@
             console.log(typeof (array));
         }
 
-        function input(){
+        function input() {
             //++, -- 可用
             //---------------------
             //输入 prompt()，输出 alert()；
@@ -27,15 +27,15 @@
             input2 = Number(input2);
             //
             var result;
-            if(op==="+"){
-                result = input1+input2;
-            }else if(op==="-"){
-                result = input1-input2;
-            }else if(op==="*"){
-                result = input1*input2;
-            }else if(op==="/"){
-                result = input1/input2;
-            }else{
+            if (op === "+") {
+                result = input1 + input2;
+            } else if (op === "-") {
+                result = input1 - input2;
+            } else if (op === "*") {
+                result = input1 * input2;
+            } else if (op === "/") {
+                result = input1 / input2;
+            } else {
                 alert("Wrong operation!");
             }
             alert(result);
@@ -56,23 +56,48 @@
             index = str.indexOf("cd");
             console.log("在str中查找cd: " + index);
 
+            let upcase = str.slice(0,1).toUpperCase() + str.slice(1).toLowerCase();
+            console.log(upcase);
         }
 
         function num() {
             var num = 100;
-            var t = num/3;
+            var t = num / 3;
             console.log(t + ", " + typeof t);
             var t2 = t.toFixed(2);
-            console.log("保留两位小数：" + t2 +", " + typeof t2)
+            console.log("保留两位小数：" + t2 + ", " + typeof t2)
+
+            let str = num.toString();//String(num);
+            console.log(typeof str);
         }
 
         function array() {
             var array = [];
             array.push("123");
+            array.push("231");
             array.push("321");
+            array.push("111");
+            array.push("222");
+            array.push("333");
             // var len = array.push("231");
             var len = array.length;
             console.log("array len: " + len + ", " + typeof array);
+
+            array.forEach(function (key) {
+                console.log('value: ' + key);
+            })
+
+            //截取
+            let copy = array.slice(2, 4);
+            copy.forEach(function (value, index) {
+                console.log('value: ' + value + ", index: " + index);
+            })
+
+            //删除
+            array.splice(1, 3);
+            array.forEach(function (key) {
+                console.log('value: ' + key);
+            })
         }
 
         function map() {
@@ -85,7 +110,7 @@
 
             console.log("map len: " + Object.keys(map).length + ", " + typeof map);
             map.forEach(function (value, key, map) {
-                if(key==='3'){
+                if (key === '3') {
                     console.log("强行终止！")
                     return false;
                 }
@@ -97,6 +122,39 @@
                 console.log("key " + obj);
             })
         }
+
+        function testDocument() {
+            let arrs = document.getElementsByTagName('input');
+            console.log('选取 input: ' + arrs.length);
+            for(var i=0; i<arrs.length; i++){
+                if(arrs[i].getAttribute('type')==='checkbox'){
+                    console.log('发现 checkbox: ' + i);
+                }
+            }
+        }
+
+        //////////////////动态函数////////////
+        function test(funcName) {
+            let param = 1;
+            try{
+                if (typeof (eval(funcName)) == "function") {
+                    console.log(eval(funcName + "(\'"+ param + "\');"));//传参
+                } else {
+                    // 函数不存在
+                    console.log("函数不存在");
+                }
+            }catch (e) {
+                console.log("函数不存在2");
+            }
+        }
+
+        function dynamicalFuncion(p1) {
+            return '动态函数: ' + p1;
+        }
+
+        // test("dynamicalFuncion");
+        // test("dynamicalFuncion2");
+
     </script>
 </head>
 <body>
@@ -110,5 +168,18 @@
 <br/>
 <input type="button" value="map" onclick="map()">
 <br/>
+
+<input type="checkbox">
+<input type="checkbox">
+<input type="checkbox">
+<input type="checkbox">
+
+<br/>
+<!--如果页面在服务器上，浏览器出于安全考虑是不允许html访问本地文件的-->
+<img src="file://C:\Users\Administrator\Desktop\img\111.jpg" alt="miss">
+
+<script type="text/javascript">
+    // testDocument();
+</script>
 </body>
 </html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue3 语法</title>
+
+    <!--    引入库: 本地-->
+    <script type="text/javascript" src="../../static/js/vue.global.js"></script>
+    <!--    在线引用：
+        Staticfile CDN（国内） : https://cdn.staticfile.org/vue/3.0.5/vue.global.js
+        unpkg：https://unpkg.com/vue@next, 会保持和 npm 发布的最新的版本一致。
+        cdnjs : https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.5/vue.global.js
+    -->
+</head>
+<body>
+<div id="test">
+    <div>
+        <p v-once>初始值：{{ num }}</p>
+        <button v-on:click="plus"> + </button>
+        <span>{{ num }}</span>
+        <button v-on:click="minus"> - </button>
+        <input type="number" v-model="num">
+    </div>
+
+    <div>
+        <p v-once>初始密码：{{ str }}</p>
+        <span>新密码：{{ str }}</span>
+        <input type="text" v-model="ipt"/>
+        <button v-on:click="reverseStr">反转</button>
+    </div>
+
+    <div>
+<!--        <div v-bind:style="{width: 20 + 'px', height: 20 + 'px', background: sty.bg, borderRadius: 10 + 'px'}">-->
+<!--            <span>{{num}}</span>-->
+<!--        </div>-->
+    </div>
+
+    <div>
+        <ball v-for="n in num" bg="red" number="1" style="display:inline-block;"></ball>
+    </div>
+</div>
+
+<script>
+    const BALL = {
+        props:['bg', 'number'],
+        template:` <div v-bind:style="{width: 20 + 'px', height: 20 + 'px', background: bg, borderRadius: 10 + 'px'}">
+            <span>{{number}}</span>
+        </div>`
+    };
+
+    const app = {
+        data() {
+            return {
+                num: 0,
+                str: '12345',
+                ipt: '',
+                obj: {
+                    id: 1,
+                    name: 'test',
+                    url: 'http://www.baidu.com'
+                },
+                sty:{
+                    bg: 'red',
+                    size: 10
+                },
+                arr: [1, 2, 3, 4]
+            }
+        },
+        computed: {
+            count: {
+                get: function () {
+                    return num;
+                },
+                set: function (n) {
+                    this.num = n;
+                }
+            }
+        },
+        methods:{
+            plus() {
+                this.num++;
+            },
+
+            minus() {
+                this.num--;
+            },
+
+            reverseStr(){
+                this.str = this.str.split('').reverse().join('');
+            },
+
+            validPass(s){
+                return s.length > 6;
+            }
+        },
+        watch:{//监听str 变化
+            ipt(newValue, oldValue){
+                if(this.validPass(newValue)){
+                    this.str = newValue;
+                }
+            }
+        },
+        components:{
+            'ball': BALL
+        }
+    };
+
+    Vue.createApp(app).mount('#test');
+</script>
+</body>
+</html>

@@ -69,7 +69,32 @@
 
             let str = num.toString();//String(num);
             console.log(typeof str);
+
+            let random1 = random(1,10);
+            let random2 = randomInt(1,10);
+            console.log("random1: " + random1 + ", random2: " + random2);
         }
+
+        /**
+         * 随机数，含小数
+         * @param min
+         * @param max
+         * @returns {*}
+         */
+        function random(min,max){
+            return Math.random()*(max-min)+min;
+        }
+
+        /**
+         * 随机数，向下取整
+         * @param min
+         * @param max
+         * @returns {number}
+         */
+        function randomInt(min,max){
+            return Math.floor(Math.random()*(max-min) +min);
+        }
+
 
         function array() {
             var array = [];

@@ -44,7 +44,7 @@ public class AccountController extends BaseController{
         }
     }
 
-    @RequestMapping("login")
+    @RequestMapping("/login")
     public String login_pc(HttpServletRequest request, Model model){
         if(request!=null){
             String username = request.getParameter("username");

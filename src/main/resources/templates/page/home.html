@@ -7,6 +7,10 @@ xmlns:th="http://www.thymeleaf.org"
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}">Title</title>
+    <script th:inline="javascript">
+        //保存数据到js
+        let json = [[${msg}]];
+    </script>
 </head>
 <body>
 Thymeleaf 测试

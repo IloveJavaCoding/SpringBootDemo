@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SheetJs Excel</title>
+    <!--    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>-->
+<!--    <script src="../static/js/xlsx.full.min.js"></script>-->
+<!--    thymeleaf res 默认位置 resource/static -->
+    <script th:src="@{/js/xlsx.full.min.js}"></script>
+    <script th:inline="javascript">
+        let json = [[${data}]];
+
+        function exportExcelold(json) {
+            const workbook = XLSX.utils.book_new();
+            const num = json['num'];
+            for (let i = 0; i < num; i++) {
+                //解析sheet
+                const sheet = json['sheets'][i];
+                let type = sheet['type'];
+                let worksheet;
+                if (type === 'json') {
+                    worksheet = XLSX.utils.json_to_sheet(sheet['data'], {
+                        header: sheet['fields']
+                    });
+                    //替换表头
+                    const titles = sheet['header'];
+                    const range = XLSX.utils.decode_range(worksheet['!ref'])
+                    for (let c = range.s.c; c <= range.e.c; c++) {
+                        const head = XLSX.utils.encode_col(c) + '1'
+                        worksheet[head].v = titles[worksheet[head].v]
+                    }
+                } else { //array
+                    worksheet = XLSX.utils.aoa_to_sheet(sheet['data']);
+                }
+
+                XLSX.utils.book_append_sheet(workbook, worksheet, sheet['name']);
+            }
+
+            XLSX.writeFile(workbook, json['name'], {
+                bookType: 'xlsx'
+            });
+        }
+
+        function exportExcel(json) {
+            const workbook = XLSX.utils.book_new();
+            const num = json['num'];
+            console.log('sheet: ' + num);
+            for (let i = 0; i < num; i++) {
+                //解析sheet
+                const sheet = json['sheets'][i];
+                let type = sheet['type'];
+                let worksheet;
+                if (type === 'json') {
+                    worksheet = XLSX.utils.json_to_sheet(sheet['data']);
+                    //替换表头
+                    XLSX.utils.sheet_add_aoa(worksheet, [sheet['header']], {origin: "A1"});
+                } else { //array
+                    worksheet = XLSX.utils.aoa_to_sheet(sheet['data']);
+                }
+
+                //设置宽度
+                worksheet["!cols"] = sheet['width'].map(w => ({
+                    wch: w
+                }));//[ { wch: 10 }, {wch: 20} ]
+
+                XLSX.utils.book_append_sheet(workbook, worksheet, sheet['name']);
+            }
+
+            XLSX.writeFile(workbook, json['name'], {
+                bookType: 'xlsx'
+            });
+        }
+
+        // 读取本地excel文件
+        function importEcxel(file, callback) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = e.target.result;
+                var workbook = XLSX.read(data, {
+                    type: 'binary',
+                    cellDates: true,
+                    raw: true
+                });
+                if (callback) callback(workbook);
+            };
+            reader.readAsBinaryString(file);
+        }
+
+        function makeData() {
+            const json = {
+                name: 'test.xlsx',
+                num: 3,
+                sheets: [{
+                    name: '节目信息',
+                    type: 'array',
+                    width: [10, 20, 20, 20, 25, 20, 20],
+                    data: [
+                        ['ID', '节目名称', '模板名称', '播放类型', '发布策略', '开始日期', '结束日期'],
+                        ['1', '导入预约全视频', '导入预约', '定时播放', '仅覆盖类型', new Date(), '2022-08-30']
+                    ]
+                },
+                    {
+                        name: '定时信息',
+                        type: 'json',
+                        // header: {
+                        //     order: '序号',
+                        //     start: '开始时间',
+                        //     end: '结束时间'
+                        // },
+                        // fields: ['order', 'start', 'end'],
+                        width: [10, 20, 20],
+                        header: ['序号', '开始时间', '结束时间'],
+                        data: [
+                            {
+                                order: 1,
+                                start: '07:00:00',
+                                end: '12:00:00'
+                            },
+                            {
+                                order: 2,
+                                start: '14:00:00',
+                                end: '22:00:00'
+                            }
+                        ]
+                    },
+                    {
+                        name: '视频排期',
+                        type: 'json',
+                        // header: {
+                        //     order: '序号',
+                        //     start: '开始时间',
+                        //     duration: '时长',
+                        //     end: '结束时间',
+                        //     name: '素材名称',
+                        //     all: '总时长'
+                        // },
+                        // fields: ['order', 'start', 'duration', 'end', 'name', 'all'],
+                        width: [10, 20, 20, 20, 35, 20],
+                        header: ['序号', '开始时间', '时长', '结束时间', '素材名称', '总时长'],
+                        data: [
+                            {
+                                order: 1,
+                                start: '07:00:00',
+                                duration: '00:01:00',
+                                end: '07:01:00',
+                                name: 'video1',
+                                all: '01:00:00'
+                            },
+                            {
+                                order: 2,
+                                start: '07:01:00',
+                                duration: '00:02:00',
+                                end: '07:03:00',
+                                name: 'video2',
+                            },
+                            {
+                                order: 3,
+                                start: '07:03:00',
+                                duration: '00:05:00',
+                                end: '07:08:00',
+                                name: 'video3',
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            exportExcel(json);
+        }
+
+        function addFile(input) {
+            var file = input.files[0];//选择的文件
+            if (file) {
+                importEcxel(file, function (workbook) {
+                    // console.log(typeof workbook + ', workbook', workbook);
+                    // workbook.SheetNames.forEach(function (value, index) {
+                    //     const json = XLSX.utils.sheet_to_json(workbook.Sheets[value]); //生成json表格内容
+                    //     console.log('表：' + index + ", " + value);
+                    //     console.log(json);
+                    //
+                    //     printTable(index, workbook.Sheets[value]);
+                    // })
+
+                    console.log(feedBack(workbook));
+                });
+            }
+        }
+
+        /**
+         * @param workbook object
+         */
+        function feedBack(workbook){
+            let map = new Map();
+            workbook.SheetNames.forEach(function (value, index) {
+                console.log('表：' + index + ", " + value);
+                const json = XLSX.utils.sheet_to_json(workbook.Sheets[value]); //生成json表格内容
+                map.set(value, json);
+            });
+
+            return map;
+        }
+
+        function printTable(index, sheet) {
+            const id = 'id' + index;
+            const html = XLSX.utils.sheet_to_html(sheet, {id});
+            const div = document.createElement('div');
+            div.setAttribute('class', 'sheet');
+            div.innerHTML = html;
+            document.getElementById('excel').appendChild(div);
+        }
+
+        function importFile() {
+            document.getElementById('fileInput').click();
+        }
+
+        function showLog() {
+            console.log(json);
+        }
+
+        function exportData() {
+            // let json2 = JSON.parse(json); //可以将json字符串转换成json对象
+            // JSON.stringify(jsonobj); //可以将json对象转换成json字符串
+            exportExcel(JSON.parse(json));
+        }
+    </script>
+
+    <style type="text/css">
+        .sheet {
+            border: #666666 1px dashed;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<!--<button onclick="makeData()">导出</button>-->
+<button onclick="showLog()">后台数据</button>
+<button onclick="exportData()">导出</button>
+<div style="display: inline-block">
+    <button onclick="importFile()">导入</button>
+    <input id="fileInput"
+           style="display: none"
+           accept=".xls,.xlsx"
+           type="file"
+           onchange="addFile(this)"/>
+</div>
+<div id="excel">
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FileSaver</title>
+    <!--    先后台下载完在打包成zip文件-->
+    <script type="text/javascript" src="../../static/js/jszip.min.js"></script>
+    <script type="text/javascript" src="../../static/js/FileSaver.min.js"></script>
+
+    <script type="text/javascript">
+        function zipFile() {
+            //下载文件
+            let data = [
+                {
+                    name: "1.png",
+                    url: "http://192.168.2.19:9991/cdmsa/2022/09/22/1cc1bc2383b21962.png"
+                },
+                {
+                    name: "/update/config/2.jpg",
+                    url: "http://192.168.2.19:9991/cdmsa/2022/09/13/984508f7977f812a.jpg"
+                },
+                {
+                    name: "/update/resource/3.mp4",
+                    url: "http://192.168.2.19:9991/cdmsa/2022/09/22/7eb254da52c545e9.mp4"
+                },
+            ];
+
+            writeAllAsZip2("1102.zip", data);
+        }
+
+        async function writeAllAsZip2(zipName, dataArr) {
+            var zip = new JSZip();
+            for (let obj of dataArr) {
+                if (obj.url == null) {
+                    continue
+                }
+
+                let data = await downloadBlob(obj.url);
+                zip.file(obj.name, data);
+            }
+
+            // 生成zip文件
+            let content = await zip.generateAsync({type: "blob"});
+            // 触发浏览器下载
+            saveAs(content, zipName);
+        }
+
+        // 使用XMLHttpRequest实现，也可使用axios取代该方法
+        function downloadBlob(url) {
+            return new Promise((resolve, reject) => {
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET", url, true);
+                xhr.responseType = "blob";
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 300) {
+                        resolve(xhr.response);
+                    } else {
+                        reject(xhr.statusText);
+                    }
+                };
+                xhr.onerror = () => reject(xhr.statusText);
+                xhr.send();
+            });
+        }
+    </script>
+</head>
+<body>
+<button type="button" onclick="zipFile()">打包</button>
+</body>
+</html>

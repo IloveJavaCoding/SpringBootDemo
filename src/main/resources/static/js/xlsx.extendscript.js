@@ -158,9 +158,9 @@ var DO_NOT_EXPORT_CODEPAGE = true;
 /* vim: set ts=2: */
 /*exported XLSX */
 /*global exports, module, require:false, process:false, Buffer:false, ArrayBuffer:false, DataView:false, Deno:false */
-var XLSX2 = {};
-function make_xlsx_lib(XLSX2){
-XLSX2.version = '0.18.5';
+var XLSX = {};
+function make_xlsx_lib(XLSX){
+XLSX.version = '0.18.5';
 var current_codepage = 1200, current_ansi = 1252;
 /*global cptable:true, window */
 var $cptable;

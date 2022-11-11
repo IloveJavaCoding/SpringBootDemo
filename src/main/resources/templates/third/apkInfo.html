@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>apk 解析</title>
+    <script type="text/javascript" src="../../static/js/app-info-parser.js"></script>
+    <style type="text/css">
+        .text_area{
+            width: 100px;
+            height: 45px;
+            margin: 0;
+            border: solid 1px black;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <label for="fileApk">
+        <input type="file" id="fileApk" accept=".apk" onchange="fileSelect(this)">
+    </label>
+</div>
+
+<div>
+    <label for="textarea">
+        <textarea id="textarea" class="text_area"></textarea>
+    </label>
+    <button type="button" onclick="clearText()">清空</button>
+</div>
+
+<script>
+    // "application/vnd.android.package-archive"
+    function fileSelect (input) {
+        var file = input.files[0]
+        const parser = new AppInfoParser(file);
+        parser.parse().then(result => {
+            console.log('app info ----> ', result)
+            console.log('icon base64 ----> ', result.icon)
+        }).catch(err => {
+            console.log('err ----> ', err)
+        })
+    }
+
+    function clearText() {
+        var ta = document.getElementById('textarea');
+        console.log("input: " + ta.value);
+        ta.value = '';
+    }
+</script>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ import com.example.sbdemo.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,7 +54,11 @@ public class AccountController extends BaseController{
             if(username==null || password==null){
                 return null;
             }
-            log(TAG, username + ", " + password);
+
+            //
+            String passwordMd5 = DigestUtils.md5DigestAsHex(password.getBytes());
+            log(TAG, username + ", " + password + ", md5: " + passwordMd5);
+
             //用户校验
             if(accountService.checkLogin(username, password)){
 //            if(username.equals("admin") && password.equals("123")){

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--    仿浏览器图片显示效果-->
+    <title>图片预览</title>
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+        }
+
+        .imageBlock {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            /*justify-content: center;*/
+            justify-content: start;
+            flex-wrap: nowrap;
+            background-color: black;
+        }
+
+        .imageItem {
+            /*max-width: 100%;*/
+            max-height: 100%;
+            object-fit: scale-down;
+            margin: auto;
+            cursor: zoom-in;
+            /*background-color: hsl(0, 0%, 90%);*/
+            /*transition: background-color 300ms;*/
+        }
+
+        .zoomOut {
+            cursor: zoom-out;
+            /*缩放值*/
+            transform: scale(0.5);
+        }
+    </style>
+</head>
+<body onload="onLoad()">
+<div class="imageBlock">
+    <img id="myImage" class="imageItem" alt="图片迷路了" onclick="zoomInOut()">
+</div>
+</body>
+
+<script>
+    let image;
+    const rate = 2;
+
+    function onLoad() {
+        // let url = "http://192.168.2.19:9991/cdmsa/2022/09/05/a10335104d1930eb.png";
+        let url = "http://192.168.2.19:9991/cdmsa/2022/09/22/1cc1bc2383b21962.png";
+        image = document.getElementById("myImage");
+        image.src = url;
+    }
+
+    function zoomInOut() {
+        // console.log(image.width + '---' + image.height + ': ' + image.style.cursor)
+        // if (image.style.cursor === 'zoom-out') {
+        //     console.log('---')
+        //     image.style.cursor = 'zoom-in';
+        //     image.width = image.width / rate;
+        //     image.height = image.height / rate;
+        // } else {
+        //     console.log('+++')
+        //     image.style.cursor = 'zoom-out';
+        //     image.width = image.width * rate;
+        //     image.height = image.height * rate;
+        // }
+
+        //自定义toggle
+        if(hasClass(image, 'zoomOut')){
+            removeClass(image,'zoomOut');
+        }else{
+            addClass(image,'zoomOut');
+        }
+    }
+
+    function hasClass(el, className) {
+        // \s匹配任何空白字符，包括空格、制表符、换页符等等
+        let reg = new RegExp('(^|\\s)' + className + '(\\s|$)')
+        return reg.test(el.className)
+    }
+
+    function addClass(el, className) {
+        if (hasClass(el, className)) {
+            return
+        }
+        let newClass = el.className.split(' ')
+        newClass.push(className)
+        el.className = newClass.join(' ')
+    }
+
+    function removeClass(el, className) {
+        if (!hasClass(el, className)) {
+            return
+        }
+        let newClass = el.className.split(' ')
+        newClass.forEach(function (val, index, newClass) {
+            if (val === className) {
+                newClass.splice(index, 1);
+            }
+        })
+        el.className = newClass.join(' ')
+    }
+</script>
+</html>

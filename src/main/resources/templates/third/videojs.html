@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>m3u8视频播放</title>
+    <!--    <link href="https://vjs.zencdn.net/7.21.0/video-js.css" rel="stylesheet">-->
+    <!--    <script src='https://vjs.zencdn.net/7.21.0/video.js'></script>-->
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/videojs-contrib-hls/5.15.0/videojs-contrib-hls.min.js" type="text/javascript"></script>-->
+
+    <link href="../../static/css/video-js.css" rel="stylesheet">
+    <script type="text/javascript" src="../../static/js/video.js"></script>
+    <script type="text/javascript" src="../../static/js/videojs-contrib-hls.min.js"></script>
+    <style>
+        .video-js .vjs-tech {
+            position: relative !important;
+        }
+
+        .inputText {
+            width: 82%;
+            height: 32px;
+        }
+
+        .inputBtn {
+            width: 8%;
+            height: 35px;
+            background: red;
+        }
+    </style>
+    <!-- videojs-contrib-hls 用于在电脑端播放 如果只需手机播放可以不引入 -->
+</head>
+<body>
+<div>
+    <video id="myVideo" class="video-js vjs-default-skin vjs-big-play-centered" preload="auto" data-setup='{}'
+           style='width: 100%;height: auto'>
+    </video>
+</div>
+
+<div style="margin-top: 10px">
+    <label for="m3u8Url"></label><input id="m3u8Url" type="text" class="inputText"/>
+    <input type="button" class="inputBtn" value="播放" onclick="changeVideo()"/>
+    <input type="button" class="inputBtn" value="清空" onclick="clearInput()"/>
+</div>
+</body>
+<script>
+    //支持格式
+    const vType = {
+        opus: 'video/ogg',
+        ogv: 'video/ogg',
+        mp4: 'video/mp4',
+        mov: 'video/mp4',
+        m4v: 'video/mp4',
+        mkv: 'video/x-matroska',
+        m4a: 'audio/mp4',
+        mp3: 'audio/mpeg',
+        aac: 'audio/aac',
+        caf: 'audio/x-caf',
+        flac: 'audio/flac',
+        oga: 'audio/ogg',
+        wav: 'audio/wav',
+        m3u8: 'application/x-mpegURL',
+        mpd: 'application/dash+xml',
+        jpg: 'image/jpeg',
+        jpeg: 'image/jpeg',
+        gif: 'image/gif',
+        png: 'image/png',
+        svg: 'image/svg+xml',
+        webp: 'image/webp'
+    };
+
+    // videojs 简单使用
+    const myVideo = videojs('myVideo', {
+        bigPlayButton: true, //播放图标
+        textTrackDisplay: true,
+        posterImage: true,//视频缩略图
+        errorDisplay: true,//错误提示
+        controls: true, //显示底部控件
+        muted: true, //静音播放
+        // preload: "auto" //预加载
+    });
+
+    function changeVideo() {
+        var url = document.getElementById('m3u8Url').value;
+        console.log(url);
+
+        let type;
+        if (url.toLowerCase().indexOf('.m3u8')!==-1) {// /\.m3u8$/.test(url)
+           type = vType.m3u8;
+        }else if(url.toLowerCase().indexOf('rtmp')!==-1){//好像不行？
+           type = "rtmp/flv";
+        }else if(url.toLowerCase().indexOf('.mp3')!==-1){
+           type = vType.mp3;
+        }else if(url.toLowerCase().indexOf('.mkv')!==-1){
+           type = vType.mkv;
+        }else {
+            type = vType.mp4;//默认
+        }
+
+        myVideo.src({
+            src: url,
+            type: type
+        })
+        myVideo.load();
+        myVideo.play();
+    }
+
+    function clearInput() {
+        //https://sod.malleter.com/20211112/L57EDNF2/index.m3u8
+        document.getElementById('m3u8Url').value = "";
+    }
+</script>

@@ -58,6 +58,13 @@
 
             let upcase = str.slice(0,1).toUpperCase() + str.slice(1).toLowerCase();
             console.log(upcase);
+
+            //替换
+            str = '[20220704_001, 20220704_002]';
+            str = str.replace(/\[|\]/g, '_');
+            console.log(str);
+
+            //
         }
 
         function num() {
@@ -73,6 +80,9 @@
             let random1 = random(1,10);
             let random2 = randomInt(1,10);
             console.log("random1: " + random1 + ", random2: " + random2);
+
+            let f = 4392 * 100 / 4393;
+            console.log(": " + f.toFixed(2));
         }
 
         /**
@@ -94,7 +104,6 @@
         function randomInt(min,max){
             return Math.floor(Math.random()*(max-min) +min);
         }
-
 
         function array() {
             var array = [];
@@ -148,6 +157,16 @@
             })
         }
 
+        function json() {
+            var str = '{"cloud":"91","cond_code":"101","cond_txt":"多云","fl":"33","hum":"71","pcpn":"0.0","pres":"995",' +
+                '"tmp":"31","vis":"30","wind_deg":"359","wind_dir":"北风","wind_sc":"3","wind_spd":"16"}'
+            var jsonObj = JSON.parse(str);
+            console.log(jsonObj);
+
+            console.log("天气：" + jsonObj['cond_txt']);
+            console.log("温度：" + jsonObj['tmp']);
+        }
+
         function testDocument() {
             let arrs = document.getElementsByTagName('input');
             console.log('选取 input: ' + arrs.length);
@@ -192,6 +211,8 @@
 <input type="button" value="array" onclick="array()">
 <br/>
 <input type="button" value="map" onclick="map()">
+<br/>
+<input type="button" value="json" onclick="json()">
 <br/>
 
 <input type="checkbox">

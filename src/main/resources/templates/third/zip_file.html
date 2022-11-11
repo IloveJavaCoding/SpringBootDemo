@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zip</title>
+    <script type="text/javascript" src="../../static/js/StreamSaver.js"></script>
+    <script type="text/javascript" src="../../static/js/zip-stream.js"></script>
+    <!--  生成可下载zip文件流，后下载 -->
+    <script type="text/javascript">
+        function zipFile() {
+            //下载文件
+            let data1 = [
+                {
+                    name: "1.png",
+                    url: "http://192.168.2.19:9991/cdmsa/2022/09/22/1cc1bc2383b21962.png"
+                },
+                {
+                    name: "2.jpg",
+                    url: "http://192.168.2.19:9991/cdmsa/2022/09/13/984508f7977f812a.jpg"
+                },
+                {
+                    name: "3.png",
+                    url: "http://192.168.2.19:9991/cdmsa/2022/09/05/a10335104d1930eb.png"
+                },
+            ];
+
+            //本地文件流
+            let data2 = [
+                {
+                    name: "eb6bd389e40804f2.log",
+                    stream: "F:\\temp\\eb6bd389e40804f2.log"
+                },
+                {
+                    name: "GTlive.txt",
+                    stream: "F:\\temp\\GTlive.txt"
+                },
+                {
+                    name: "GTlive.m3u",
+                    stream: "F:\\temp\\GTlive.m3u"
+                },
+            ];
+
+            writeAllAsZip("test", data1, data2);
+        }
+
+        /**
+         * @param {Object} zipName 存储文件名（无后缀）
+         * @param {Object} dataArr 资源链接列表
+         * @param {Object} dataArr2 资源路径列表
+         */
+        function writeAllAsZip(zipName, dataArr, dataArr2) {
+            console.log("START >>>>>" + zipName)
+            const fileStream = streamSaver.createWriteStream(`${zipName}.zip`)
+            const readableZipStream = new createWriter({
+                start(ctrl) {
+                },
+                async pull(ctrl) {
+                    //获取链接文件流方法
+                    const promise = el => {
+                        let name = el.name;
+                        return new Promise(resolve => {
+                            console.log(el.name);
+                            fetch(el.url).then(resp => {
+                                if (resp.status == 200) {
+                                    return () => resp.body
+                                }
+                                return null
+                            }).then(stream => {
+                                resolve({
+                                    name: name,
+                                    stream: stream
+                                })
+                            })
+                        })
+                    }
+
+                    //获取本地文件流方法
+                    const promiseFile = el => {
+                        return new Promise(resolve => {
+                            console.log(el.name);
+                            var blob = new Blob([el.stream],{type:"text/plain;charset=utf-8"});
+                            resolve({
+                                name: el.name,
+                                stream: () => blob.stream()
+                            })
+                            // var url = window.URL.createObjectURL(blob);
+                            // fetch(url).then(resp => {
+                            //     if (resp.status == 200) {
+                            //         return () => resp.body
+                            //     }
+                            //     return null
+                            // }).then(stream => {
+                            //     resolve({
+                            //         name: el.name,
+                            //         stream: stream
+                            //     })
+                            // })
+                        })
+                    }
+
+                    var arr = []
+                    dataArr.forEach(obj => {
+                        arr.push(promise(obj))
+                    });
+                    dataArr2.forEach(obj => {
+                        arr.push(promiseFile(obj))
+                    });
+
+                    await Promise.all(arr).then(res => {
+                        let nameMapList = []
+                        res.forEach(item => {
+                            let name = item.name
+                            const stream = item.stream
+                            let nameList = nameMapList.map(nameMap => nameMap.name)
+                            //校验文件名称是否存在，如果存在则修改文件名称
+                            if (nameList.indexOf(name) === -1) {
+                                nameMapList.push({
+                                    name: name,
+                                    cnt: 0
+                                })
+                            } else {
+                                let nameItem = nameMapList.find(item => item.name == name)
+                                nameItem.cnt += 1
+                                let fileName = name.substring(0, name.lastIndexOf('.'))
+                                let prefix = name.substr(name.lastIndexOf('.'))
+                                name = fileName + ("(" + nameItem.cnt + ")") + prefix
+                            }
+                            if (item.stream) {
+                                let file = {
+                                    name,
+                                    stream
+                                }
+                                ctrl.enqueue(file)
+                            }
+                        })
+                    })
+
+                    ctrl.close()
+                }
+            })
+
+            // more optimized
+            if (window.WritableStream && readableZipStream.pipeTo) {
+                return readableZipStream.pipeTo(fileStream).then(() => console.log('FINISH <<<<<'))
+            }
+
+            // less optimized
+            const writer = fileStream.getWriter()
+            const reader = readableZipStream.getReader()
+            const pump = () => reader.read().then(res => res.done ? writer.close() : writer.write(res.value).then(pump))
+            pump()
+        }
+    </script>
+</head>
+<body>
+<div>
+    <button onclick="zipFile()">Zip</button>
+</div>
+
+</body>
+</html>

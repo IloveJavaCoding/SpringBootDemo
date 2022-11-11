@@ -6,8 +6,8 @@
     <!--    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>-->
 <!--    <script src="../static/js/xlsx.full.min.js"></script>-->
 <!--    thymeleaf res 默认位置 resource/static -->
-    <script th:src="@{/js/xlsx.full.min.js}"></script>
-    <script th:src="@{/js/xlsx.extendscript.js}"></script>
+<!--    <script th:src="@{/js/xlsx.full.min.js}"></script>-->
+    <script th:src="@{/static/js/xlsx.extendscript.js}"></script>
     <script th:inline="javascript">
         let json = [[${data}]];
 
@@ -69,12 +69,9 @@
 
                 //冻结表头
                 worksheet["!freeze"] = {
-                    //xSplit代表固定哪一列，设置为0就不生效了，不知道为什么，必须要固定一列
-                    // ySplit代表固定前几行，根据上面计算的参数headerRows来
-                    xSplit: "1",// 第一列
-                    ySplit: "1",// 表头行数
+                    xSplit: "1",// 代表固定哪一列，设置为0就不生效了，不知道为什么，必须要固定一列
+                    ySplit: "1",// 代表固定前几行，根据上面计算的参数headerRows来
                     topLeftCell: "B2",//在未冻结区域的左上角显示的单元格，默认为第一个未冻结的单元格
-                    // activePane: "bottomRight",
                     state: "frozen"
                 };
 
